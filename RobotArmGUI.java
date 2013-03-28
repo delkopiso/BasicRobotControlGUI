@@ -25,13 +25,8 @@ import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author Kopiso
- */
 public class RobotArmGUI extends JFrame {
-
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
     private JPanel mainPanel,jogModePanel,fileImportPanel;
 
@@ -408,7 +403,7 @@ public class RobotArmGUI extends JFrame {
     public static void main(String args[]) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+        } catch (Exception ex) {
             java.util.logging.Logger.getLogger(RobotArmGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 

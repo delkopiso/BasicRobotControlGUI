@@ -8,8 +8,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.List;
 
-public class RobotArmClient{
-    private final Socket socket;
+public class RobotArmClient {
+	private final Socket socket;
     private static final String robotIP = "localhost";
     private static final int robotPORT = 27273;
     private PrintWriter out;
@@ -87,5 +87,4 @@ public class RobotArmClient{
             System.out.println(e);
         }
     }
-
 }
