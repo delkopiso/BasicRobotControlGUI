@@ -5,22 +5,22 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JTextField;
 
-public class DecrementButtonListener implements ActionListener {
+public class IncrementButtonListener implements ActionListener {
 
 	private JTextField field;
 
-	public DecrementButtonListener(JTextField field){
+	public IncrementButtonListener(JTextField field){
 		this.field = field;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
-		decrement(field, e);
+		increment(field, e);
 	}
 
-	private void decrement(JTextField field, ActionEvent evt) {
+	private void increment(JTextField field, ActionEvent evt) {
 		String text = field.getText();
 		int num = Integer.parseInt(text);
-		field.setText(String.valueOf(num-1));
+		field.setText(String.valueOf(num+1));
 	}
-
 }

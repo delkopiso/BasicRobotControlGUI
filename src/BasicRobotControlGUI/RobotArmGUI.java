@@ -20,7 +20,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableModel;
@@ -164,10 +163,12 @@ public class RobotArmGUI extends JFrame {
         fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         filter = new FileFilter() {
-            public boolean accept(File f) {
+            @Override
+			public boolean accept(File f) {
                 return f.isDirectory() || f.getName().toLowerCase().endsWith(".csv");
             }
-            public String getDescription() {
+            @Override
+			public String getDescription() {
                 return "*.csv files";
             }
         };
@@ -195,7 +196,8 @@ public class RobotArmGUI extends JFrame {
         velocityIncrementButton.addActionListener(new IncrementButtonListener(velocityTextField));
 
         goButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 int[] posArray = getPosArray();
                 String msg = MyUtil.convertIntsToStringFormat(posArray);
                 System.out.println(msg);
@@ -204,19 +206,22 @@ public class RobotArmGUI extends JFrame {
         });
         
         runButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 //TODO
             }
         });
         
         stopButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 //TODO
             }
         });
         
         resetButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 //TODO
             }
         });
@@ -339,7 +344,8 @@ public class RobotArmGUI extends JFrame {
         fileMenu.add(exitItem);
         
         openItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
+            @Override
+			public void actionPerformed(ActionEvent evt) {
                 int retval = fileChooser.showOpenDialog(RobotArmGUI.this);
                 if (retval == JFileChooser.APPROVE_OPTION) {
                     currentFile = fileChooser.getSelectedFile();
@@ -349,7 +355,8 @@ public class RobotArmGUI extends JFrame {
         });
         
         exitItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
+            @Override
+			public void actionPerformed(ActionEvent evt) {
                 client.quit();
             }
         });
@@ -409,7 +416,8 @@ public class RobotArmGUI extends JFrame {
 
         /* Create and display the form */
         EventQueue.invokeLater(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 RobotArmGUI main = new RobotArmGUI(client);
                 main.setVisible(true);
             }
