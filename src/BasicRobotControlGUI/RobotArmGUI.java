@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -307,21 +308,17 @@ public class RobotArmGUI extends JFrame {
 
         fileImportPanelLayout.setHorizontalGroup(fileImportPanelLayout.createParallelGroup()
                 .addComponent(dataTableScrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE)
-                .addGroup(fileImportPanelLayout.createSequentialGroup()
+                .addGroup(Alignment.CENTER,fileImportPanelLayout.createSequentialGroup()
                         .addComponent(runButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, 32)
                         .addComponent(resetButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, 32)
-                        .addComponent(stopButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, 32))
-                .addComponent(statusLabel)
-                .addComponent(statusField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE));
+                        .addComponent(stopButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, 32)));
         
         fileImportPanelLayout.setVerticalGroup(fileImportPanelLayout.createSequentialGroup()
                 .addComponent(dataTableScrollPane)
                 .addGroup(fileImportPanelLayout.createParallelGroup()
                         .addComponent(runButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, 32)
                         .addComponent(resetButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, 32)
-                        .addComponent(stopButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, 32))
-                .addComponent(statusLabel)
-                .addComponent(statusField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, 32));
+                        .addComponent(stopButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, 32)));
         
         this.add(mainPanel);
         GroupLayout mainPanelLayout = new GroupLayout(mainPanel);
@@ -332,11 +329,17 @@ public class RobotArmGUI extends JFrame {
         
         mainPanelLayout.setHorizontalGroup(mainPanelLayout.createParallelGroup()
                 .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addComponent(jogModePanel).addComponent(fileImportPanel)));
+                        .addComponent(jogModePanel).addComponent(fileImportPanel))
+                .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addComponent(statusLabel)
+                        .addComponent(statusField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, 600)));
         
         mainPanelLayout.setVerticalGroup(mainPanelLayout.createSequentialGroup()
                 .addGroup(mainPanelLayout.createParallelGroup()
-                        .addComponent(jogModePanel).addComponent(fileImportPanel)));
+                        .addComponent(jogModePanel).addComponent(fileImportPanel))
+                .addGroup(mainPanelLayout.createParallelGroup()
+                        .addComponent(statusLabel)
+                        .addComponent(statusField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, 600)));
         
         fileMenu.setText("File");
         menuBar.add(fileMenu);
