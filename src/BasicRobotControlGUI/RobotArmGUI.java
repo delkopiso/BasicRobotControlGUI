@@ -2,9 +2,6 @@ package BasicRobotControlGUI;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.GroupLayout;
@@ -20,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileFilter;
@@ -27,7 +25,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class RobotArmGUI extends JFrame {
 	private static final long serialVersionUID = 1L;
-	private static final int COLUMN_SIZE = 8;
+	protected final int COLUMN_SIZE = 8;
 
     private JPanel mainPanel,jogModePanel, fileImportPanel;
 
@@ -69,32 +67,32 @@ public class RobotArmGUI extends JFrame {
     private JButton yPositionIncrementButton;
     private JButton zPositionDecrementButton;
     private JButton zPositionIncrementButton;
-    private JButton goButton;
-    private JButton runButton;
-    private JButton stopButton;
-    private JButton resetButton;
+    protected JButton goButton;
+    protected JButton runButton;
+    protected JButton stopButton;
+    protected JButton resetButton;
     
-    private JSwitchBox jogSwitch;
-    private boolean jogMode;
-    private boolean run;
-    private int currentRow;
+    protected JSwitchBox jogSwitch;
+    protected boolean jogMode;
+    protected boolean run;
+    protected int currentRow;
 
     private JTable dataTable;
-    private DefaultTableModel dataTableModel;
+    protected DefaultTableModel dataTableModel;
     private JScrollPane dataTableScrollPane;
     
     private JMenuBar menuBar;
     private JMenu fileMenu;
-    public JMenuItem openItem;
-    public JMenuItem saveItem;
-    public JMenuItem exitItem;
-    public JFileChooser fileChooser;
+    protected JMenuItem openItem;
+    protected JMenuItem saveItem;
+    protected JMenuItem exitItem;
+    protected JFileChooser fileChooser;
     private FileFilter filter;
 
     private JTextField statusField;
     
-    public File currentFile;
-    public String stringToSave;
+    protected File currentFile;
+    protected String stringToSave;
     
     static RobotArmClient client;
 
@@ -162,7 +160,7 @@ public class RobotArmGUI extends JFrame {
         resetButton = new JButton("RESET");
         jogSwitch =  new JSwitchBox("ON", "OFF");
         jogMode = false;
-        run = false;
+        run = true;
         currentRow = 0;
 
         dataTable = new JTable(0,COLUMN_SIZE); dataTable.setRowHeight(15);
@@ -209,44 +207,11 @@ public class RobotArmGUI extends JFrame {
         velocityDecrementButton.addActionListener(new DecrementButtonListener(this, client, velocityTextField));
         velocityIncrementButton.addActionListener(new IncrementButtonListener(this, client, velocityTextField));
 
-        goButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-                int[] posArray = getPosArray();
-                String msg = MyUtil.convertIntsToStringFormat(posArray);
-                System.out.println(msg);
-                client.send(msg);
-            }
-        });
-        
-        jogSwitch.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JSwitchBox swBtn = (JSwitchBox)e.getSource();
-                boolean value = swBtn.isSelected();
-                jogMode = value;
-             }
-         });
-        
-        runButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			    int i=0;
-                while(run && i <dataTableModel.getRowCount()){
-                    //TODO
-                    ++i;
-                }
-            }
-        });
-        
-        stopButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-                //TODO
-            }
-        });
-        
-        resetButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-                //TODO
-            }
-        });
+        goButton.addActionListener(new ButtonListener(this));        
+        jogSwitch.addActionListener(new ButtonListener(this));
+        runButton.addActionListener(new ButtonListener(this));        
+        stopButton.addActionListener(new ButtonListener(this));        
+        resetButton.addActionListener(new ButtonListener(this));
         
         GroupLayout jogPanelLayout = new GroupLayout(jogModePanel);
         jogModePanel.setLayout(jogPanelLayout);
@@ -461,11 +426,12 @@ public class RobotArmGUI extends JFrame {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
-            java.util.logging.Logger.getLogger(RobotArmGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            /*java.util.logging.Logger.getLogger(RobotArmGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex)*/;
+            System.out.println(ex);
         }
 
         /* Create and display the form */
-        EventQueue.invokeLater(new Runnable() {
+        SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
                 RobotArmGUI main = new RobotArmGUI(client);
                 main.setVisible(true);
