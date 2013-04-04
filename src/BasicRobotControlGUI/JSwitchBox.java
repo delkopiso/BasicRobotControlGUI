@@ -32,7 +32,7 @@ public class JSwitchBox extends AbstractButton{
     private final String falseLabel;
     private Dimension thumbBounds;
     private int max;
-
+    private boolean selected;
 
     public JSwitchBox(String trueLabel, String falseLabel) {
         this.trueLabel = trueLabel;
@@ -54,6 +54,11 @@ public class JSwitchBox extends AbstractButton{
             }
         });
     }
+    
+    @Override
+    public boolean isSelected(){
+        return selected;
+    }
 
     @Override
     public Dimension getPreferredSize() {
@@ -62,6 +67,7 @@ public class JSwitchBox extends AbstractButton{
 
     @Override
     public void setSelected( boolean b ) {
+        selected = b;
         if(b){
             setText( trueLabel );
             setBackground( green );
@@ -70,6 +76,7 @@ public class JSwitchBox extends AbstractButton{
             setText( falseLabel );
         }
         super.setSelected( b );
+        super.doClick();
     }
     @Override
     public void setText( String text ) {
