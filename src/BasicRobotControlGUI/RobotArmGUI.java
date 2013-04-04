@@ -26,6 +26,7 @@ import javax.swing.table.DefaultTableModel;
 public class RobotArmGUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 	protected final int COLUMN_SIZE = 8;
+	protected final double MAX_SPEED = 500;
 
     private JPanel mainPanel,jogModePanel, fileImportPanel;
 
