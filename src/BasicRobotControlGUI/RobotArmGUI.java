@@ -20,7 +20,6 @@ import javax.swing.JSlider;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileFilter;
@@ -37,7 +36,6 @@ public class RobotArmGUI extends JFrame {
      */
     protected final double MAX_ANG_SPEED = 50;
 	protected final int COLUMN_SIZE = 8;
-	protected final double MAX_SPEED = 500;
 
     private JPanel mainPanel,jogModePanel, fileImportPanel;
 
@@ -111,9 +109,7 @@ public class RobotArmGUI extends JFrame {
     protected File openFile;
     protected File saveFile;
     protected String stringToSave;
-    
-    protected Timer timer;
-    
+        
     static RobotArmClient client;
 
     /**
@@ -212,8 +208,6 @@ public class RobotArmGUI extends JFrame {
         statusField = new JTextField();
         statusField.setEditable(false);
         
-        timer = new Timer(runDelay, null);
-
         xPositionDecrementButton.addActionListener(new DecrementButtonListener(this, xPositionTextField));
         xPositionIncrementButton.addActionListener(new IncrementButtonListener(this, xPositionTextField));
         yPositionDecrementButton.addActionListener(new DecrementButtonListener(this, yPositionTextField));
