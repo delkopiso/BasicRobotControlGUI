@@ -1,8 +1,10 @@
 package BasicRobotControlGUI;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -49,12 +51,26 @@ public class MyUtil {
 			scanner.close();
 			file.close();
 		} catch (Exception e) {
-			System.out.println(e);  
+			System.out.println(e);
 		}
 		return commands;
 	}
+	
+	public static void writeToFile(File file, String content){
+	    try {
+            if (!file.exists()) { // if file doesn't exists, then create it
+                file.createNewFile();
+            } 
+            FileWriter fw = new FileWriter(file.getAbsoluteFile());
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(content);
+            bw.close();
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+	}
 
-	public static String convertIntsToStringFormat(int[] array){
+	public static String convertIntsToStringFormat(double[] array){
 		String s = "{";
 		for (int i=0; i<array.length; i++){
 			if (i==array.length-1) s += "'" + valueChars[i] + "'" + ":" + array[i] + "}";

@@ -2,10 +2,13 @@ package BasicRobotControlGUI;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.concurrent.ExecutionException;
+
+import javax.swing.SwingWorker;
 
 public class ButtonListener implements ActionListener {
 
-    private RobotArmGUI gui;
+    protected RobotArmGUI gui;
     
     public ButtonListener(RobotArmGUI gui) {
         this.gui = gui;
@@ -13,36 +16,38 @@ public class ButtonListener implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == gui.runButton){
-            while(gui.run && gui.currentRow <gui.dataTableModel.getRowCount()){
-                try{
-                    Thread.sleep(3000);
-                }catch(Exception ex){
-                    
+            SwingWorker<Integer,Void> tableRunner = new SwingWorker<Integer,Void>(){
+                @Override
+                protected Integer doInBackground() throws Exception {
+                    int numRows = gui.dataTableModel.getRowCount();
+                    int current = gui.currentRow;
+                    while(gui.run && current <numRows){
+                        gui.sendTableEntry(current);
+                        ++current;
+                        Thread.sleep(gui.runDelay);
+                    }
+                    return current;
                 }
-                int[] values = new int[gui.COLUMN_SIZE];
-                for (int i=0; i < gui.COLUMN_SIZE; i++){
-                    String val = (String) gui.dataTableModel.getValueAt(gui.currentRow, i);
-                    values[i] = Integer.parseInt(val);
+                @Override
+                protected void done(){
+                    try {
+                        gui.currentRow = get();
+                    } catch (InterruptedException e) {
+                        System.out.println(e);
+                    } catch (ExecutionException e) {
+                        System.out.println(e);
+                    }
+                    gui.run = true;
                 }
-                for(int i : values){
-                    System.out.println(i);
-                }
-//                RobotArmGUI.client.send(MyUtil.convertIntsToStringFormat(values));
-                ++gui.currentRow;
-            }
+            };
+            tableRunner.execute();
         }else if (e.getSource() == gui.goButton){
-            int[] posArray = gui.getPosArray();
-            String msg = MyUtil.convertIntsToStringFormat(posArray);
-            System.out.println(msg);
-            RobotArmGUI.client.send(msg);
+            gui.sendPos();
         }else if (e.getSource() == gui.stopButton){
+            System.out.println("STOP BUTTON PRESSED");
             gui.run = false;
-            try{
-                Thread.sleep(30);
-            }catch(Exception ex){
-            }
-            gui.run = true;
         }else if (e.getSource() == gui.resetButton){
+            System.out.println("RESET BUTTON PRESSED");
             gui.currentRow = 0;
         }else if (e.getSource() == gui.jogSwitch){
             JSwitchBox swBtn = (JSwitchBox)e.getSource();

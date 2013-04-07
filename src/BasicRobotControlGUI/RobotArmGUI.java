@@ -3,6 +3,7 @@ package BasicRobotControlGUI;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.io.File;
+import java.util.Vector;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -15,9 +16,11 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileFilter;
@@ -25,6 +28,14 @@ import javax.swing.table.DefaultTableModel;
 
 public class RobotArmGUI extends JFrame {
 	private static final long serialVersionUID = 1L;
+    /** <p> The maximum speed the robot arm can translate 
+     * in meters per seconds </p>
+     */
+	protected final double MAX_SPEED = 500;
+	/** <p> The maximum speed the robot arm can rotate 
+     * in radians per seconds </p>
+     */
+    protected final double MAX_ANG_SPEED = 50;
 	protected final int COLUMN_SIZE = 8;
 
     private JPanel mainPanel,jogModePanel, fileImportPanel;
@@ -40,7 +51,7 @@ public class RobotArmGUI extends JFrame {
     private JLabel statusLabel;
     private JLabel jogSwitchLabel;
     
-    private int x,y,z,a,b,c,w,v;
+    private double x,y,z,a,b,c,w,v;
     
     private JTextField aAngleTextField;
     private JTextField bAngleTextField;
@@ -72,10 +83,15 @@ public class RobotArmGUI extends JFrame {
     protected JButton stopButton;
     protected JButton resetButton;
     
+    protected JSlider jogSpeedSlider;
+    protected JSlider jogAngSpeedSlider;
     protected JSwitchBox jogSwitch;
     protected boolean jogMode;
-    protected boolean run;
-    protected int currentRow;
+    protected volatile boolean run;
+    protected volatile int currentRow;
+    /**<p> The delay in milliseconds in between sending each instruction in the file
+     * to the robot arm when the run button is pressed. </p>*/
+    protected final int runDelay = 1500;
 
     private JTable dataTable;
     protected DefaultTableModel dataTableModel;
@@ -91,8 +107,11 @@ public class RobotArmGUI extends JFrame {
 
     private JTextField statusField;
     
-    protected File currentFile;
+    protected File openFile;
+    protected File saveFile;
     protected String stringToSave;
+    
+    protected Timer timer;
     
     static RobotArmClient client;
 
@@ -129,14 +148,14 @@ public class RobotArmGUI extends JFrame {
         yPositionTextField = new JTextField("0");
         zPositionTextField = new JTextField("0");
 
-        x = Integer.parseInt(xPositionTextField.getText());
-        y = Integer.parseInt(yPositionTextField.getText());
-        z = Integer.parseInt(zPositionTextField.getText());
-        a = Integer.parseInt(aAngleTextField.getText());
-        b = Integer.parseInt(bAngleTextField.getText());
-        c = Integer.parseInt(cAngleTextField.getText());
-        w = Integer.parseInt(omegaTextField.getText());
-        v = Integer.parseInt(velocityTextField.getText());
+        x = Double.parseDouble(xPositionTextField.getText());
+        y = Double.parseDouble(yPositionTextField.getText());
+        z = Double.parseDouble(zPositionTextField.getText());
+        a = Double.parseDouble(aAngleTextField.getText());
+        b = Double.parseDouble(bAngleTextField.getText());
+        c = Double.parseDouble(cAngleTextField.getText());
+        w = Double.parseDouble(omegaTextField.getText());
+        v = Double.parseDouble(velocityTextField.getText());
         
         xPositionDecrementButton = new JButton("DOWN");
         yPositionDecrementButton = new JButton("DOWN");
@@ -158,6 +177,8 @@ public class RobotArmGUI extends JFrame {
         runButton = new JButton("RUN");
         stopButton = new JButton("STOP"); stopButton.setBackground(Color.RED);
         resetButton = new JButton("RESET");
+        jogSpeedSlider = new JSlider(0, (int)MAX_SPEED, 0);
+        jogAngSpeedSlider = new JSlider(0, (int)MAX_ANG_SPEED, 0);
         jogSwitch =  new JSwitchBox("ON", "OFF");
         jogMode = false;
         run = true;
@@ -189,25 +210,27 @@ public class RobotArmGUI extends JFrame {
         statusLabel = new JLabel("CURRENT STATUS: ");
         statusField = new JTextField();
         statusField.setEditable(false);
+        
+        timer = new Timer(runDelay, null);
 
-        xPositionDecrementButton.addActionListener(new DecrementButtonListener(this, client, xPositionTextField));
-        xPositionIncrementButton.addActionListener(new IncrementButtonListener(this, client, xPositionTextField));
-        yPositionDecrementButton.addActionListener(new DecrementButtonListener(this, client, yPositionTextField));
-        yPositionIncrementButton.addActionListener(new IncrementButtonListener(this, client, yPositionTextField));
-        zPositionDecrementButton.addActionListener(new DecrementButtonListener(this, client, zPositionTextField));
-        zPositionIncrementButton.addActionListener(new IncrementButtonListener(this, client, zPositionTextField));
-        aAngleDecrementButton.addActionListener(new DecrementButtonListener(this, client, aAngleTextField));
-        aAngleIncrementButton.addActionListener(new IncrementButtonListener(this, client, aAngleTextField));
-        bAngleDecrementButton.addActionListener(new DecrementButtonListener(this, client, bAngleTextField));
-        bAngleIncrementButton.addActionListener(new IncrementButtonListener(this, client, bAngleTextField));
-        cAngleDecrementButton.addActionListener(new DecrementButtonListener(this, client, cAngleTextField));
-        cAngleIncrementButton.addActionListener(new IncrementButtonListener(this, client, cAngleTextField));
-        omegaDecrementButton.addActionListener(new DecrementButtonListener(this, client, omegaTextField));
-        omegaIncrementButton.addActionListener(new IncrementButtonListener(this, client, omegaTextField));
-        velocityDecrementButton.addActionListener(new DecrementButtonListener(this, client, velocityTextField));
-        velocityIncrementButton.addActionListener(new IncrementButtonListener(this, client, velocityTextField));
+        xPositionDecrementButton.addActionListener(new DecrementButtonListener(this, xPositionTextField));
+        xPositionIncrementButton.addActionListener(new IncrementButtonListener(this, xPositionTextField));
+        yPositionDecrementButton.addActionListener(new DecrementButtonListener(this, yPositionTextField));
+        yPositionIncrementButton.addActionListener(new IncrementButtonListener(this, yPositionTextField));
+        zPositionDecrementButton.addActionListener(new DecrementButtonListener(this, zPositionTextField));
+        zPositionIncrementButton.addActionListener(new IncrementButtonListener(this, zPositionTextField));
+        aAngleDecrementButton.addActionListener(new DecrementButtonListener(this, aAngleTextField));
+        aAngleIncrementButton.addActionListener(new IncrementButtonListener(this, aAngleTextField));
+        bAngleDecrementButton.addActionListener(new DecrementButtonListener(this, bAngleTextField));
+        bAngleIncrementButton.addActionListener(new IncrementButtonListener(this, bAngleTextField));
+        cAngleDecrementButton.addActionListener(new DecrementButtonListener(this, cAngleTextField));
+        cAngleIncrementButton.addActionListener(new IncrementButtonListener(this, cAngleTextField));
+        omegaDecrementButton.addActionListener(new DecrementButtonListener(this, omegaTextField));
+        omegaIncrementButton.addActionListener(new IncrementButtonListener(this, omegaTextField));
+        velocityDecrementButton.addActionListener(new DecrementButtonListener(this, velocityTextField));
+        velocityIncrementButton.addActionListener(new IncrementButtonListener(this, velocityTextField));
 
-        goButton.addActionListener(new ButtonListener(this));        
+        goButton.addActionListener(new ButtonListener(this));
         jogSwitch.addActionListener(new ButtonListener(this));
         runButton.addActionListener(new ButtonListener(this));        
         stopButton.addActionListener(new ButtonListener(this));        
@@ -372,7 +395,7 @@ public class RobotArmGUI extends JFrame {
      */
     public void populateTable() {
         try{
-            String[][] data = MyUtil.readFromfile(currentFile);
+            String[][] data = MyUtil.readFromfile(openFile);
             for (String[] row : data){
                 dataTableModel.addRow(row);
             }
@@ -382,29 +405,49 @@ public class RobotArmGUI extends JFrame {
     }
     
     /**
-     * Retrieves the entries in the table to be saved in a file
-     * @return a string containing the values in the table
+     * <p> Retrieves the entries in the table and saves them to a file </p>
      */
     public String pollTable() {
-        // TODO Auto-generated method stub
-        return null;
+        String result = "";
+        @SuppressWarnings("unchecked")
+        Vector<Vector<String>> dataVector = (Vector<Vector<String>>)dataTableModel.getDataVector();
+        for (int i=0; i<dataTableModel.getRowCount(); i++){
+            Vector<String> rowVector = dataVector.elementAt(i);
+            for (String s : rowVector){
+                if (rowVector.indexOf(s) < rowVector.size()-1) result += s +",";
+                else result += s +"\n";
+            }
+        }
+        return result;
+    }
+    
+    protected synchronized void sendTableEntry(int rowNumber){
+        double[] values = new double[COLUMN_SIZE];
+        for (int j=0; j < COLUMN_SIZE; j++){
+            String val = (String) dataTableModel.getValueAt(rowNumber, j);
+            values[j] = Double.parseDouble(val);
+        }
+//        for(double val : values){
+//            System.out.println(val);
+//        }
+        RobotArmGUI.client.send(MyUtil.convertIntsToStringFormat(values));
     }
     
     /**
-     * Retrieves the values in each text field and return an int array of the values
-     * @return an int array with the values in the text fields
+     * Retrieves the values in each text field and sends info to robot arm
      */
-    protected int[] getPosArray(){
-        x = Integer.parseInt(xPositionTextField.getText());
-        y = Integer.parseInt(yPositionTextField.getText());
-        z = Integer.parseInt(zPositionTextField.getText());
-        a = Integer.parseInt(aAngleTextField.getText());
-        b = Integer.parseInt(bAngleTextField.getText());
-        c = Integer.parseInt(cAngleTextField.getText());
-        w = Integer.parseInt(omegaTextField.getText());
-        v = Integer.parseInt(velocityTextField.getText());
-        int[] array = {x,y,z,a,b,c,v,w};
-        return array;
+    protected synchronized void sendPos(){
+        x = Double.parseDouble(xPositionTextField.getText());
+        y = Double.parseDouble(yPositionTextField.getText());
+        z = Double.parseDouble(zPositionTextField.getText());
+        a = Double.parseDouble(aAngleTextField.getText());
+        b = Double.parseDouble(bAngleTextField.getText());
+        c = Double.parseDouble(cAngleTextField.getText());
+        w = Double.parseDouble(omegaTextField.getText());
+        v = Double.parseDouble(velocityTextField.getText());
+        double[] array = {x,y,z,a,b,c,v,w};
+        String msg = MyUtil.convertIntsToStringFormat(array);
+        client.send(msg);
     }
     
     /**
@@ -426,7 +469,6 @@ public class RobotArmGUI extends JFrame {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
-            /*java.util.logging.Logger.getLogger(RobotArmGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex)*/;
             System.out.println(ex);
         }
 

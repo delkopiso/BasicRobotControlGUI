@@ -2,9 +2,6 @@ package BasicRobotControlGUI;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
 
 import javax.swing.JFileChooser;
 
@@ -20,20 +17,15 @@ public class FileOptionsListener implements ActionListener {
         if (e.getSource() == gui.openItem){
             int retval = gui.fileChooser.showOpenDialog(gui);
             if (retval == JFileChooser.APPROVE_OPTION) {
-                gui.currentFile = gui.fileChooser.getSelectedFile();
+                gui.openFile = gui.fileChooser.getSelectedFile();
                 gui.populateTable();
             }
         }else if (e.getSource() == gui.saveItem){
             int retval = gui.fileChooser.showSaveDialog(gui);
             if (retval == JFileChooser.APPROVE_OPTION) {
-                File file = gui.fileChooser.getSelectedFile();
-                try {
-                    PrintStream ps = new PrintStream(file);
-                    ps.print(gui.pollTable());
-                    ps.close();
-                } catch (IOException ex) {
-                    System.out.println(ex);
-                }
+                gui.saveFile = gui.fileChooser.getSelectedFile();
+                gui.stringToSave = gui.pollTable();
+                MyUtil.writeToFile(gui.saveFile, gui.stringToSave);
             }
         }else if (e.getSource() == gui.exitItem){
             RobotArmGUI.client.quit();
