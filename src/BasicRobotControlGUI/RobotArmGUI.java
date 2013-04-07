@@ -37,6 +37,7 @@ public class RobotArmGUI extends JFrame {
      */
     protected final double MAX_ANG_SPEED = 50;
 	protected final int COLUMN_SIZE = 8;
+	protected final double MAX_SPEED = 500;
 
     private JPanel mainPanel,jogModePanel, fileImportPanel;
 
