@@ -27,7 +27,7 @@ public class ButtonListener implements ActionListener {
                 for(int i : values){
                     System.out.println(i);
                 }
-//                RobotArmGUI.client.send(MyUtil.convertIntsToStringFormat(values));
+                RobotArmGUI.client.send(MyUtil.convertIntsToStringFormat(values));
                 ++gui.currentRow;
             }
         }else if (e.getSource() == gui.goButton){
