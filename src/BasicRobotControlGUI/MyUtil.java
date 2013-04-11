@@ -70,7 +70,7 @@ public class MyUtil {
         }
 	}
 
-	public static String convertIntsToStringFormat(double[] array){
+	public static String convertDigitsToStringFormat(double[] array){
 		String s = "{";
 		for (int i=0; i<array.length; i++){
 			if (i==array.length-1) s += "'" + valueChars[i] + "'" + ":" + array[i] + "}";

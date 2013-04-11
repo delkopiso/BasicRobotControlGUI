@@ -20,8 +20,8 @@ public class ButtonListener implements ActionListener {
                 @Override
                 protected Integer doInBackground() throws Exception {
                     int numRows = gui.dataTableModel.getRowCount();
-                    int current = gui.currentRow;
-                    while(gui.run && current <numRows){
+                    int current = gui.currentRow.get();
+                    while(gui.run.get() && current <numRows){
                         gui.sendTableEntry(current);
                         ++current;
                         Thread.sleep(gui.runDelay);
@@ -31,13 +31,14 @@ public class ButtonListener implements ActionListener {
                 @Override
                 protected void done(){
                     try {
-                        gui.currentRow = get();
+                        gui.currentRow.getAndSet(get());
                     } catch (InterruptedException e) {
                         System.out.println(e);
                     } catch (ExecutionException e) {
                         System.out.println(e);
                     }
-                    gui.run = true;
+                    gui.dataTableModel.fireTableRowsUpdated(0, gui.dataTableModel.getRowCount());
+                    gui.run.getAndSet(true);
                 }
             };
             tableRunner.execute();
@@ -45,15 +46,14 @@ public class ButtonListener implements ActionListener {
             gui.sendPos();
         }else if (e.getSource() == gui.stopButton){
             System.out.println("STOP BUTTON PRESSED");
-            gui.run = false;
+            gui.run.getAndSet(false);
         }else if (e.getSource() == gui.resetButton){
             System.out.println("RESET BUTTON PRESSED");
-            gui.currentRow = 0;
-        }else if (e.getSource() == gui.jogSwitch){
-            JSwitchBox swBtn = (JSwitchBox)e.getSource();
-            boolean value = swBtn.isSelected();
-            gui.jogMode = value;
+            gui.currentRow.getAndSet(0);
+        }else if (e.getSource() == gui.jogOnRadioButton) {
+            gui.jogMode = (!gui.jogMode) ? true : false;
+        } else if (e.getSource() == gui.jogOffRadioButton) {
+            gui.jogMode = (gui.jogMode) ? false : true;
         }
     }
-
 }
