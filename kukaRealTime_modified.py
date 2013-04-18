@@ -178,12 +178,6 @@ class pythonInterfaceThread(threading.Thread):
 			commandVelocity.set(commandDict['v'])
 			commandOmega.set(commandDict['w'])
 
-                        ######
-			outData = statusReport.get() + " *** " + xActualPosition.get() + " *** " + yActualPosition.get() + " *** " +
-                                zActualPosition.get() + " *** " + aActualPosition.get() + " *** " + bActualPosition.get() + " *** " + cActualPosition.get()
-                        self.interface.transmit(connection, outData)
-			######
-			
 			if 'terminate' in commandDict:
 				self.interface.close()
 				time.sleep(1)
@@ -308,6 +302,12 @@ if __name__ == "__main__":
 	interface = socketUDPServer(IPAddress = '192.168.10.3', IPPort = 27272)
 	kuka = kukaRealTimeThread(interface)
 	pythonThread = pythonInterfaceThread()
+
+	######
+	outData = statusReport.get() + " *** " + xActualPosition.get() + " *** " + yActualPosition.get() + " *** " + \
+	zActualPosition.get() + " *** " + aActualPosition.get() + " *** " + bActualPosition.get() + " *** " + cActualPosition.get()
+	self.interface.transmit(connection, outData)
+	######
 	
 	while terminateReady.get() == False:
 		time.sleep(1)
