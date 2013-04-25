@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.List;
 
 public class RobotArmClient {
 	private final Socket socket;
@@ -17,6 +16,8 @@ public class RobotArmClient {
     private int portNumber;
     private RobotArmGUI gui;
     private BufferedReader in;
+    private final String testData = "TEST";
+    private String data = null;
 
     /**
      * Constructor for the Robot Arm GUI client
@@ -37,6 +38,7 @@ public class RobotArmClient {
 
     public void run() throws IOException{
         while(true){
+            send();
             read();
         }
     }
@@ -47,27 +49,41 @@ public class RobotArmClient {
      */
     public void read() throws IOException{
         String line = in.readLine();
-        gui.updateStatus(line);
+        
+        if (line.contains("|")){
+            String[] fields = line.split("\\|", 7);
+            String status = fields[0];
+            double[] array = new double[6];
+            for (int i=0; i<array.length; i++){
+                array[i] = Double.parseDouble(fields[i+1]);
+            }
+            String format = MyUtil.convertDigitsToStringFormat(array);
+            gui.updateStatus(status + "    " + format);
+        }
     }
     
-    /**
-     * Sends individual instructions to the Robot Arm server
-     * @param msg the instruction to be sent to the server
-     */
-    public void send(String msg) {
-        out.println(msg);
+    public void send() {
+        if (data != null){
+            out.println(data);
+        }else{
+            out.println(testData);
+        }
         out.flush();
     }
-
-    /**
+    
+    public void setData(String s){
+        this.data = s;
+    }
+/*
+    *//**
      * Sends batch instructions to the Robot Arm server
-     */
+     *//*
     public void sendBatch(List<String> list){
         for (String s : list){
             send(s);
         }
     }
-
+*/
     public void quit() {
         try{
             socket.close();
