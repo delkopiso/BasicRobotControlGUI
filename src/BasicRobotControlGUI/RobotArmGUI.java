@@ -61,6 +61,7 @@ public class RobotArmGUI extends JFrame {
     private JLabel jogSwitchLabel;
     
     private double x,y,z,a,b,c,w,v;
+    private double[] currentPosition = {0,0,0,0,0,0};
     
     private JTextField aAngleTextField;
     private JTextField bAngleTextField;
@@ -138,12 +139,13 @@ public class RobotArmGUI extends JFrame {
         jogSpeedLabel = new JLabel("Jog Speed");
         jogAngSpeedLabel = new JLabel("Angular Speed");
 
-        aAngleTextField = new JTextField("-150");
-        bAngleTextField = new JTextField("34");
-        cAngleTextField = new JTextField("111");
-        xPositionTextField = new JTextField("500");
-        yPositionTextField = new JTextField("0");
-        zPositionTextField = new JTextField("630");
+        aAngleTextField = new JTextField();
+        bAngleTextField = new JTextField();
+        cAngleTextField = new JTextField();
+        xPositionTextField = new JTextField();
+        yPositionTextField = new JTextField();
+        zPositionTextField = new JTextField();
+        updatePositionTextFields();
 
         x = Double.parseDouble(xPositionTextField.getText());
         y = Double.parseDouble(yPositionTextField.getText());
@@ -217,10 +219,10 @@ public class RobotArmGUI extends JFrame {
         fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         filter = new FileFilter() {
 			public boolean accept(File f) {
-                return f.isDirectory() || f.getName().toLowerCase().endsWith(".csv");
+                return f.isDirectory() || f.getName().toLowerCase().endsWith(".csv") || f.getName().toLowerCase().endsWith(".txt");
             }
 			public String getDescription() {
-                return "*.csv files";
+                return "*.csv, *.txt files";
             }
         };
         fileChooser.setFileFilter(filter);
@@ -403,7 +405,16 @@ public class RobotArmGUI extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    /**
+    private void updatePositionTextFields() {
+        aAngleTextField.setText(""+currentPosition[3]);
+        bAngleTextField.setText(""+currentPosition[4]);
+        cAngleTextField.setText(""+currentPosition[5]);
+        xPositionTextField.setText(""+currentPosition[0]);
+        yPositionTextField.setText(""+currentPosition[1]);
+        zPositionTextField.setText(""+currentPosition[2]);
+	}
+
+	/**
      * Populates the JTable with the contents of the imported file
      */
     public void populateTable() {
@@ -474,6 +485,13 @@ public class RobotArmGUI extends JFrame {
     
     public void updateStatus(String msg){
         statusField.setText(msg);
+    }
+    
+    public void updateCurrentPosition(double[] array){
+    	for (int i=0; i<currentPosition.length; i++){
+    		currentPosition[i] = array[i];
+    	}
+    	updatePositionTextFields();
     }
     
     /**

@@ -49,19 +49,15 @@ public class RobotArmClient {
      */
     public void read() throws IOException{
         String line = in.readLine();
-        System.out.println(line);
-//        gui.updateStatus(line);
-        
-        if (line.contains("|")){
-            String[] fields = line.split("\\|", 7);
-            String status = fields[0];
-            double[] array = new double[6];
-            for (int i=0; i<array.length; i++){
-                array[i] = Double.parseDouble(fields[i+1]);
-            }
-            String format = MyUtil.convertDigitsToStringFormat(array);
-            gui.updateStatus(status + "    " + format);
+        String[] fields = line.split("\\|", 7);
+        String status = fields[0];
+        double[] array = new double[6];
+        for (int i=0; i<array.length; i++){
+        	array[i] = Double.parseDouble(fields[i+1]);
         }
+        gui.updateCurrentPosition(array);
+        String format = MyUtil.convertDigitsToStringFormat(array);
+        gui.updateStatus(status + "    " + format);
     }
     
     public void send() {
