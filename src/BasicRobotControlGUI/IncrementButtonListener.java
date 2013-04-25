@@ -25,7 +25,7 @@ public class IncrementButtonListener implements ActionListener {
 
 	private void increment(JTextField field, ActionEvent evt) {
 		String text = field.getText();
-		int num = Integer.parseInt(text);
+		double num = Double.parseDouble(text);
 		field.setText(String.valueOf(num+1));
 	}
 }

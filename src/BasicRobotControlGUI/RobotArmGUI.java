@@ -138,12 +138,12 @@ public class RobotArmGUI extends JFrame {
         jogSpeedLabel = new JLabel("Jog Speed");
         jogAngSpeedLabel = new JLabel("Angular Speed");
 
-        aAngleTextField = new JTextField("0");
-        bAngleTextField = new JTextField("0");
-        cAngleTextField = new JTextField("0");
-        xPositionTextField = new JTextField("0");
+        aAngleTextField = new JTextField("-150");
+        bAngleTextField = new JTextField("34");
+        cAngleTextField = new JTextField("111");
+        xPositionTextField = new JTextField("500");
         yPositionTextField = new JTextField("0");
-        zPositionTextField = new JTextField("0");
+        zPositionTextField = new JTextField("630");
 
         x = Double.parseDouble(xPositionTextField.getText());
         y = Double.parseDouble(yPositionTextField.getText());
@@ -443,7 +443,7 @@ public class RobotArmGUI extends JFrame {
         for(double val : values){
             System.out.println(val);
         }
-//        RobotArmGUI.client.send(MyUtil.convertIntsToStringFormat(values));
+        RobotArmGUI.client.send(MyUtil.convertDigitsToStringFormat(values));
     }
     
     /**
@@ -460,8 +460,8 @@ public class RobotArmGUI extends JFrame {
         v = jogSpeedSlider.getValue();
         double[] array = {x,y,z,a,b,c,v,w};
         String msg = MyUtil.convertDigitsToStringFormat(array);
-        System.out.println(msg);
-//        client.send(msg);
+//        System.out.println(msg);
+        client.send(msg);
     }
     
     /**

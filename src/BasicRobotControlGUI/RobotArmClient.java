@@ -17,6 +17,7 @@ public class RobotArmClient {
     private int portNumber;
     private RobotArmGUI gui;
     private BufferedReader in;
+    private final String testData = "TEST";
 
     /**
      * Constructor for the Robot Arm GUI client
@@ -37,7 +38,11 @@ public class RobotArmClient {
 
     public void run() throws IOException{
         while(true){
+        	System.out.println("Sending...");
+        	send(testData);
+        	System.out.println("Reading...");
             read();
+            System.out.println("NOT BLOCKING");
         }
     }
 
@@ -47,7 +52,8 @@ public class RobotArmClient {
      */
     public void read() throws IOException{
         String line = in.readLine();
-        gui.updateStatus(line);
+        System.out.println(line);
+//        gui.updateStatus(line);
     }
     
     /**

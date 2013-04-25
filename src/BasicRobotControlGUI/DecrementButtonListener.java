@@ -25,7 +25,7 @@ public class DecrementButtonListener implements ActionListener {
 
 	private void decrement(JTextField field, ActionEvent evt) {
 		String text = field.getText();
-		int num = Integer.parseInt(text);
+		double num = Double.parseDouble(text);
 		field.setText(String.valueOf(num-1));
 	}
 
