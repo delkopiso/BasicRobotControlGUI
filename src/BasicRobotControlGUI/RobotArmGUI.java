@@ -440,10 +440,10 @@ public class RobotArmGUI extends JFrame {
             String val = (String) dataTableModel.getValueAt(rowNumber, j);
             values[j] = Double.parseDouble(val);
         }
-        for(double val : values){
-            System.out.println(val);
-        }
-        RobotArmGUI.client.send(MyUtil.convertDigitsToStringFormat(values));
+//        for(double val : values){
+//            System.out.println(val);
+//        }
+        client.setData(MyUtil.convertDigitsToStringFormat(values));
     }
     
     /**
@@ -461,7 +461,7 @@ public class RobotArmGUI extends JFrame {
         double[] array = {x,y,z,a,b,c,v,w};
         String msg = MyUtil.convertDigitsToStringFormat(array);
 //        System.out.println(msg);
-        client.send(msg);
+        client.setData(msg);
     }
     
     /**
@@ -473,8 +473,7 @@ public class RobotArmGUI extends JFrame {
     }
     
     public void updateStatus(String msg){
-        //TODO
-        System.out.println(msg);
+        statusField.setText(msg);
     }
     
     /**
