@@ -92,6 +92,24 @@ public class MyUtil {
 		}
 		return list;
 	}
+	
+	public static double[] determineCommandValues(double[] vals, double[] window, double[] currentPos){
+	    double[] commandVals = currentPos;
+	    for (int i=0; i<vals.length; i++){
+	        double diff = vals[i] - currentPos[i];
+	        if (Math.abs(diff) < window[i]){
+	            commandVals[i] = vals[i];
+	        }else{
+	            //TODO	            
+	        }
+	    }
+	    return commandVals;
+	}
+	
+	private double clip (double val, double limit){
+	    double result = val < limit ? val : limit;
+	    return result;
+	}
 
 	/**
 	 * Exception used for signaling format errors not matching File grammar

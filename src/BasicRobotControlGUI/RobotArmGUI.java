@@ -47,6 +47,8 @@ public class RobotArmGUI extends JFrame {
 	protected final int COLUMN_SIZE = 8;
 	private final String[] COLUMN_HEADINGS = {"x-pos","y-pos","z-pos","a-angle","b-angle","c-angle","velocity","omega"};
 	
+	protected SettingsMenu settingsMenu;
+	
     private JPanel mainPanel,jogModePanel, fileImportPanel;
 
     private JLabel aAngleLabel;
@@ -61,6 +63,7 @@ public class RobotArmGUI extends JFrame {
     private JLabel jogSwitchLabel;
     
     private double x,y,z,a,b,c,w,v;
+    private double[] posWindowValues;
     private double[] currentPosition = {0,0,0,0,0,0};
     
     private JTextField aAngleTextField;
@@ -103,6 +106,7 @@ public class RobotArmGUI extends JFrame {
     private JMenu fileMenu;
     protected JMenuItem openItem;
     protected JMenuItem saveItem;
+    protected JMenuItem prefItem;
     protected JMenuItem exitItem;
     protected JFileChooser fileChooser;
     private FileFilter filter;
@@ -214,6 +218,7 @@ public class RobotArmGUI extends JFrame {
         fileMenu = new JMenu();
         openItem = new JMenuItem("Open...");
         saveItem = new JMenuItem("Save Table Entries");
+        prefItem = new JMenuItem("Settings");
         exitItem = new JMenuItem("Exit");
         fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
@@ -391,11 +396,16 @@ public class RobotArmGUI extends JFrame {
         menuBar.add(fileMenu);
         fileMenu.add(openItem);
         fileMenu.add(saveItem);
+        fileMenu.add(prefItem);
         fileMenu.add(exitItem);
         
         openItem.addActionListener(new FileOptionsListener(this));
         saveItem.addActionListener(new FileOptionsListener(this));
+        prefItem.addActionListener(new FileOptionsListener(this));
         exitItem.addActionListener(new FileOptionsListener(this));
+        
+        settingsMenu = new SettingsMenu(this);
+        posWindowValues = settingsMenu.getWindowValues();
         
         setJMenuBar(menuBar);
         setContentPane(mainPanel);
@@ -454,6 +464,7 @@ public class RobotArmGUI extends JFrame {
 //        for(double val : values){
 //            System.out.println(val);
 //        }
+//        values = MyUtil.determineCommandValues(values, getWindow(), getCurrentPosition());
         client.setData(MyUtil.convertDigitsToStringFormat(values));
     }
     
@@ -470,6 +481,7 @@ public class RobotArmGUI extends JFrame {
         w = jogAngSpeedSlider.getValue();
         v = jogSpeedSlider.getValue();
         double[] array = {x,y,z,a,b,c,v,w};
+//        array = MyUtil.determineCommandValues(array, getWindow(), getCurrentPosition());
         String msg = MyUtil.convertDigitsToStringFormat(array);
 //        System.out.println(msg);
         client.setData(msg);
@@ -492,6 +504,14 @@ public class RobotArmGUI extends JFrame {
     		currentPosition[i] = array[i];
     	}
     	updatePositionTextFields();
+    }
+    
+    public double[] getCurrentPosition(){
+        return this.currentPosition;
+    }
+    
+    public double[] getWindow(){
+        return this.posWindowValues;
     }
     
     /**

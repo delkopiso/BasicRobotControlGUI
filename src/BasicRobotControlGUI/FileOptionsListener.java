@@ -27,6 +27,8 @@ public class FileOptionsListener implements ActionListener {
                 gui.stringToSave = gui.pollTable();
                 MyUtil.writeToFile(gui.saveFile, gui.stringToSave);
             }
+        }else if (e.getSource() == gui.prefItem){
+            gui.settingsMenu.setVisible(true);
         }else if (e.getSource() == gui.exitItem){
             RobotArmGUI.client.quit();
         }
