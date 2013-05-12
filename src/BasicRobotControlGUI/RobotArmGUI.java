@@ -562,8 +562,12 @@ public class RobotArmGUI extends JFrame {
         return this.currentPosition;
     }
     
-    public double[] getWindow(){
+    public double[] getMinValues(){
         return this.posWindowMinValues;
+    }
+    
+    public double[] getMaxValues(){
+        return this.posWindowMaxValues;
     }
     
     /**
