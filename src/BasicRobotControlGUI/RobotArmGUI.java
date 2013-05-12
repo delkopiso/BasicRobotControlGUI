@@ -1,7 +1,5 @@
 package BasicRobotControlGUI;
 
-
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -10,9 +8,9 @@ import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -66,7 +64,8 @@ public class RobotArmGUI extends JFrame {
     private JLabel jogSwitchLabel;
     
     private double x,y,z,a,b,c,w,v;
-    private double[] posWindowValues;
+    private double[] posWindowMinValues;
+    private double[] posWindowMaxValues;
     private double[] currentPosition = {0,0,0,0,0,0};
     
     private JTextField aAngleTextField;
@@ -107,20 +106,17 @@ public class RobotArmGUI extends JFrame {
     
     private JMenuBar menuBar;
     private JMenu fileMenu;
-    
-    
+    protected JMenuItem openItem;
+    protected JMenuItem saveItem;
+    protected JMenuItem prefItem;
+    protected JMenuItem sensItem;
+    protected JMenuItem exitItem;
     
     private JMenu sensorMenu;
     protected JMenuItem sensorItem1;
     protected JMenuItem sensorItem2;
     protected JMenuItem sensorItem3;
     
-    
-    protected JMenuItem openItem;
-    protected JMenuItem saveItem;
-    protected JMenuItem prefItem;
-    protected JMenuItem sensItem;
-    protected JMenuItem exitItem;
     protected JFileChooser fileChooser;
     private FileFilter filter;
 
@@ -231,15 +227,10 @@ public class RobotArmGUI extends JFrame {
         dataTableScrollPane = new JScrollPane(dataTable);
         this.add(dataTableScrollPane, BorderLayout.CENTER);
         
-        
-        
-      
-        
         sensorMenu = new JMenu();
         sensorItem1 = new JMenuItem("Sonar");
         sensorItem2 = new JMenuItem("IR1");
         sensorItem3 = new JMenuItem("IR2");
-        
         
         menuBar = new JMenuBar();
         fileMenu = new JMenu();
@@ -460,7 +451,8 @@ public class RobotArmGUI extends JFrame {
         sensorItem3.addActionListener(new FileOptionsListener(this));
         
         settingsMenu = new SettingsMenu(this);
-        posWindowValues = settingsMenu.getWindowValues();
+        posWindowMaxValues = settingsMenu.getWindowMaxValues();
+        posWindowMinValues = settingsMenu.getWindowMinValues();
         sensorMenu2 = new SensorMenu2(this);
         
         setJMenuBar(menuBar);
@@ -571,7 +563,7 @@ public class RobotArmGUI extends JFrame {
     }
     
     public double[] getWindow(){
-        return this.posWindowValues;
+        return this.posWindowMinValues;
     }
     
     /**

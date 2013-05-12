@@ -101,6 +101,7 @@ public class RobotArmClient implements SerialPortEventListener {
     public void send() {
         if (data != null){
             out.println(data);
+            setData(null);
         }else{
             out.println(testData);
         }
