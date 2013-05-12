@@ -63,7 +63,8 @@ public class RobotArmGUI extends JFrame {
     private JLabel jogSwitchLabel;
     
     private double x,y,z,a,b,c,w,v;
-    private double[] posWindowValues;
+    private double[] posWindowMinValues;
+    private double[] posWindowMaxValues;
     private double[] currentPosition = {0,0,0,0,0,0};
     
     private JTextField aAngleTextField;
@@ -405,7 +406,8 @@ public class RobotArmGUI extends JFrame {
         exitItem.addActionListener(new FileOptionsListener(this));
         
         settingsMenu = new SettingsMenu(this);
-        posWindowValues = settingsMenu.getWindowValues();
+        posWindowMinValues = settingsMenu.getWindowMinValues();
+        posWindowMaxValues = settingsMenu.getWindowMaxValues();
         
         setJMenuBar(menuBar);
         setContentPane(mainPanel);
@@ -510,8 +512,12 @@ public class RobotArmGUI extends JFrame {
         return this.currentPosition;
     }
     
-    public double[] getWindow(){
-        return this.posWindowValues;
+    public double[] getWindowMin(){
+        return this.posWindowMinValues;
+    }
+    
+    public double[] getWindowMax(){
+        return this.posWindowMaxValues;
     }
     
     /**
