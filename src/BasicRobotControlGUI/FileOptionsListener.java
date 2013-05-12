@@ -4,6 +4,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JFileChooser;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JFileChooser;
 
 public class FileOptionsListener implements ActionListener {
     
@@ -31,6 +35,12 @@ public class FileOptionsListener implements ActionListener {
             gui.settingsMenu.setVisible(true);
         }else if (e.getSource() == gui.exitItem){
             RobotArmGUI.client.quit();
+        }else if (e.getSource() == gui.sensorItem1){
+            gui.sensorMenu2.setVisible(true);
+        }else if (e.getSource() == gui.sensorItem2){
+            gui.sensorMenu2.setVisible(true);
+        }else if (e.getSource() == gui.sensorItem3){
+            gui.sensorMenu2.setVisible(true);
         }
     }
 

@@ -1,5 +1,7 @@
 package BasicRobotControlGUI;
 
+
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -48,6 +50,7 @@ public class RobotArmGUI extends JFrame {
 	private final String[] COLUMN_HEADINGS = {"x-pos","y-pos","z-pos","a-angle","b-angle","c-angle","velocity","omega"};
 	
 	protected SettingsMenu settingsMenu;
+	protected SensorMenu2 sensorMenu2;
 	
     private JPanel mainPanel,jogModePanel, fileImportPanel;
 
@@ -63,8 +66,7 @@ public class RobotArmGUI extends JFrame {
     private JLabel jogSwitchLabel;
     
     private double x,y,z,a,b,c,w,v;
-    private double[] posWindowMinValues;
-    private double[] posWindowMaxValues;
+    private double[] posWindowValues;
     private double[] currentPosition = {0,0,0,0,0,0};
     
     private JTextField aAngleTextField;
@@ -105,9 +107,19 @@ public class RobotArmGUI extends JFrame {
     
     private JMenuBar menuBar;
     private JMenu fileMenu;
+    
+    
+    
+    private JMenu sensorMenu;
+    protected JMenuItem sensorItem1;
+    protected JMenuItem sensorItem2;
+    protected JMenuItem sensorItem3;
+    
+    
     protected JMenuItem openItem;
     protected JMenuItem saveItem;
     protected JMenuItem prefItem;
+    protected JMenuItem sensItem;
     protected JMenuItem exitItem;
     protected JFileChooser fileChooser;
     private FileFilter filter;
@@ -117,6 +129,9 @@ public class RobotArmGUI extends JFrame {
     protected File openFile;
     protected File saveFile;
     protected String stringToSave;
+	//private Component statusLabel2;
+	private JTextField statusField2;
+	private JLabel statusLabel2;
         
     static RobotArmClient client;
 
@@ -126,8 +141,9 @@ public class RobotArmGUI extends JFrame {
     public RobotArmGUI(RobotArmClient client) {
         RobotArmGUI.client = client;
         initComponents();
+        //startSensors();
     }
-
+   
     private void initComponents() {
         
         mainPanel = new JPanel();
@@ -215,11 +231,22 @@ public class RobotArmGUI extends JFrame {
         dataTableScrollPane = new JScrollPane(dataTable);
         this.add(dataTableScrollPane, BorderLayout.CENTER);
         
+        
+        
+      
+        
+        sensorMenu = new JMenu();
+        sensorItem1 = new JMenuItem("Sonar");
+        sensorItem2 = new JMenuItem("IR1");
+        sensorItem3 = new JMenuItem("IR2");
+        
+        
         menuBar = new JMenuBar();
         fileMenu = new JMenu();
         openItem = new JMenuItem("Open...");
         saveItem = new JMenuItem("Save Table Entries");
         prefItem = new JMenuItem("Settings");
+        sensItem = new JMenuItem("Add Sensors");
         exitItem = new JMenuItem("Exit");
         fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
@@ -236,6 +263,9 @@ public class RobotArmGUI extends JFrame {
         statusLabel = new JLabel("CURRENT STATUS: ");
         statusField = new JTextField();
         statusField.setEditable(false);
+        statusLabel2 = new JLabel("SENSORS: ");
+        statusField2 = new JTextField();
+        statusField2.setEditable(false);
         
         xPositionDecrementButton.addActionListener(new DecrementButtonListener(this, xPositionTextField));
         xPositionIncrementButton.addActionListener(new IncrementButtonListener(this, xPositionTextField));
@@ -384,30 +414,54 @@ public class RobotArmGUI extends JFrame {
                         .addComponent(jogModePanel).addComponent(fileImportPanel))
                 .addGroup(mainPanelLayout.createSequentialGroup()
                         .addComponent(statusLabel)
-                        .addComponent(statusField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+                        .addComponent(statusField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))        
+                 
+                .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addComponent(statusLabel2)
+                        .addComponent(statusField2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
         
         mainPanelLayout.setVerticalGroup(mainPanelLayout.createSequentialGroup()
                 .addGroup(mainPanelLayout.createParallelGroup()
                         .addComponent(jogModePanel).addComponent(fileImportPanel))
                 .addGroup(mainPanelLayout.createParallelGroup()
                         .addComponent(statusLabel)
-                        .addComponent(statusField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+                        .addComponent(statusField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(mainPanelLayout.createParallelGroup()
+                        .addComponent(statusLabel2)
+                        .addComponent(statusField2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+        
+        sensorMenu = new JMenu();
+        sensorItem1 = new JMenuItem("Sonar");
+        sensorItem2 = new JMenuItem("IR1");
+        sensorItem3 = new JMenuItem("IR2");
+        
+        sensorMenu.setText("Add Sensors");
+        sensorMenu.add(sensorItem1);
+        sensorMenu.add(sensorItem2);
+        sensorMenu.add(sensorItem3);
         
         fileMenu.setText("File");
         menuBar.add(fileMenu);
         fileMenu.add(openItem);
         fileMenu.add(saveItem);
         fileMenu.add(prefItem);
+        //fileMenu.add(sensItem);
+        fileMenu.add(sensorMenu);
         fileMenu.add(exitItem);
         
         openItem.addActionListener(new FileOptionsListener(this));
         saveItem.addActionListener(new FileOptionsListener(this));
         prefItem.addActionListener(new FileOptionsListener(this));
+        //sensItem.addActionListener(new FileOptionsListener(this));
         exitItem.addActionListener(new FileOptionsListener(this));
         
+        sensorItem1.addActionListener(new FileOptionsListener(this));
+        sensorItem2.addActionListener(new FileOptionsListener(this));
+        sensorItem3.addActionListener(new FileOptionsListener(this));
+        
         settingsMenu = new SettingsMenu(this);
-        posWindowMinValues = settingsMenu.getWindowMinValues();
-        posWindowMaxValues = settingsMenu.getWindowMaxValues();
+        posWindowValues = settingsMenu.getWindowValues();
+        sensorMenu2 = new SensorMenu2(this);
         
         setJMenuBar(menuBar);
         setContentPane(mainPanel);
@@ -501,6 +555,10 @@ public class RobotArmGUI extends JFrame {
         statusField.setText(msg);
     }
     
+    public void updateStatus2(String msg){
+    	statusField2.setText(msg);
+    }
+    
     public void updateCurrentPosition(double[] array){
     	for (int i=0; i<currentPosition.length; i++){
     		currentPosition[i] = array[i];
@@ -512,12 +570,8 @@ public class RobotArmGUI extends JFrame {
         return this.currentPosition;
     }
     
-    public double[] getWindowMin(){
-        return this.posWindowMinValues;
-    }
-    
-    public double[] getWindowMax(){
-        return this.posWindowMaxValues;
+    public double[] getWindow(){
+        return this.posWindowValues;
     }
     
     /**
