@@ -32,24 +32,24 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
 public class RobotArmGUI extends JFrame {
-	private static final long serialVersionUID = 1L;
-	/**<p> The delay in milliseconds in between sending each instruction in the file
+        private static final long serialVersionUID = 1L;
+        /**<p> The delay in milliseconds in between sending each instruction in the file
      * to the robot arm when the run button is pressed. </p>*/
     protected final long runDelay = 1500;
     /** <p> The maximum speed the robot arm can translate 
      * in meters per seconds </p>
      */
-	protected final double MAX_SPEED = 500;
-	/** <p> The maximum speed the robot arm can rotate 
+        protected final double MAX_SPEED = 500;
+        /** <p> The maximum speed the robot arm can rotate 
      * in radians per seconds </p>
      */
     protected final double MAX_ANG_SPEED = 50;
-	protected final int COLUMN_SIZE = 8;
-	private final String[] COLUMN_HEADINGS = {"x-pos","y-pos","z-pos","a-angle","b-angle","c-angle","velocity","omega"};
-	
-	protected SettingsMenu settingsMenu;
-	protected SensorMenu2 sensorMenu2;
-	
+        protected final int COLUMN_SIZE = 8;
+        private final String[] COLUMN_HEADINGS = {"x-pos","y-pos","z-pos","a-angle","b-angle","c-angle","velocity","omega"};
+        
+        protected SettingsMenu settingsMenu;
+        protected SensorMenu2 sensorMenu2;
+        
     private JPanel mainPanel,jogModePanel, fileImportPanel;
 
     private JLabel aAngleLabel;
@@ -125,9 +125,9 @@ public class RobotArmGUI extends JFrame {
     protected File openFile;
     protected File saveFile;
     protected String stringToSave;
-	//private Component statusLabel2;
-	private JTextField statusField2;
-	private JLabel statusLabel2;
+        //private Component statusLabel2;
+        private JTextField statusField2;
+        private JLabel statusLabel2;
         
     static RobotArmClient client;
 
@@ -242,10 +242,10 @@ public class RobotArmGUI extends JFrame {
         fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         filter = new FileFilter() {
-			public boolean accept(File f) {
+                        public boolean accept(File f) {
                 return f.isDirectory() || f.getName().toLowerCase().endsWith(".csv") || f.getName().toLowerCase().endsWith(".txt");
             }
-			public String getDescription() {
+                        public String getDescription() {
                 return "*.csv, *.txt files";
             }
         };
@@ -470,9 +470,9 @@ public class RobotArmGUI extends JFrame {
         xPositionTextField.setText(""+currentPosition[0]);
         yPositionTextField.setText(""+currentPosition[1]);
         zPositionTextField.setText(""+currentPosition[2]);
-	}
+        }
 
-	/**
+        /**
      * Populates the JTable with the contents of the imported file
      */
     public void populateTable() {
@@ -548,14 +548,14 @@ public class RobotArmGUI extends JFrame {
     }
     
     public void updateStatus2(String msg){
-    	statusField2.setText(msg);
+        statusField2.setText(msg);
     }
     
     public void updateCurrentPosition(double[] array){
-    	for (int i=0; i<currentPosition.length; i++){
-    		currentPosition[i] = array[i];
-    	}
-    	updatePositionTextFields();
+        for (int i=0; i<currentPosition.length; i++){
+                currentPosition[i] = array[i];
+        }
+        updatePositionTextFields();
     }
     
     public double[] getCurrentPosition(){
@@ -582,7 +582,7 @@ public class RobotArmGUI extends JFrame {
 
         /* Create and display the form */
         SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
+                        public void run() {
                 RobotArmGUI main = new RobotArmGUI(client);
                 main.setVisible(true);
             }
