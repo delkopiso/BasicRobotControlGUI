@@ -28,9 +28,9 @@ public class RobotArmClient implements SerialPortEventListener {
     private BufferedReader in;
     private final String testData = "TEST";
     private String data = null;
+
     
-    
-    
+   
     
     ///
 	SerialPort serialPort;
@@ -190,7 +190,8 @@ public class RobotArmClient implements SerialPortEventListener {
 		if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
 			try {
 				String inputLine=input.readLine();
-		        gui.updateStatus2("Sensor"+inputLine);
+				
+		        gui.updateStatus2(inputLine);
 				System.out.println(inputLine);
 			} catch (Exception e) {
 				System.err.println(e.toString());

@@ -36,11 +36,15 @@ public class FileOptionsListener implements ActionListener {
         }else if (e.getSource() == gui.exitItem){
             RobotArmGUI.client.quit();
         }else if (e.getSource() == gui.sensorItem1){
-            gui.sensorMenu2.setVisible(true);
+            gui.sonarSensorMenu.setVisible(true);
         }else if (e.getSource() == gui.sensorItem2){
-            gui.sensorMenu2.setVisible(true);
+            gui.ir1SensorMenu.setVisible(true);
         }else if (e.getSource() == gui.sensorItem3){
-            gui.sensorMenu2.setVisible(true);
+            gui.ir2SensorMenu.setVisible(true);
+        }else if (e.getSource() == gui.sketchItem){
+//        	gui.sketchPad.init();
+        	gui.getContentPane().add(gui.sketchPad.getContentPane());
+//        	gui.sketchPad.start();
         }
     }
 
