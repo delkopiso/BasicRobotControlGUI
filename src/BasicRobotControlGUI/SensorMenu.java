@@ -28,42 +28,42 @@ public class SensorMenu extends JFrame {
     private JLabel mm1, degrees1, mm2, degrees2, mm3, degrees3;
     protected JButton OKButton;
     private Preferences preferences;
-    private final String X_MIN_PREFS = "X-Pos Min";
-    private final String Y_MIN_PREFS = "Y-Pos Min";
-    private final String Z_MIN_PREFS = "Z-Pos Min";
-    private final String A_MIN_PREFS = "A-Angle Min";
-    private final String B_MIN_PREFS = "B-Angle Min";
-    private final String C_MIN_PREFS = "C-Angle Min";
-    private final double xAbsoluteMin = -700;
-    private final double yAbsoluteMin = -700;
+    private final String X_SONAR_MIN_PREFS = "X-Pos Sonar Min";
+    private final String Y_SONAR_MIN_PREFS = "Y-Pos Sonar Min";
+    private final String Z_SONAR_MIN_PREFS = "Z-Pos Sonar Min";
+    private final String A_SONAR_MIN_PREFS = "A-Angle Sonar Min";
+    private final String B_SONAR_MIN_PREFS = "B-Angle Sonar Min";
+    private final String C_SONAR_MIN_PREFS = "C-Angle Sonar Min";
+    private final double xAbsoluteMin = 500;
+    private final double yAbsoluteMin = 0;
     private final double zAbsoluteMin = 0;
-    private final double aAbsoluteMin = -180;
-    private final double bAbsoluteMin = -45;
-    private final double cAbsoluteMin = -90;
-    private final double xAbsoluteMax = 700;
-    private final double yAbsoluteMax = 700;
-    private final double zAbsoluteMax = 700;
-    private final double aAbsoluteMax = 180;
-    private final double bAbsoluteMax = 45;
-    private final double cAbsoluteMax = 90;
-    private double X_MIN_DEFAULT = xAbsoluteMin;
-    private double Y_MIN_DEFAULT = yAbsoluteMin;
-    private double Z_MIN_DEFAULT = zAbsoluteMin;
-    private double A_MIN_DEFAULT = aAbsoluteMin;
-    private double B_MIN_DEFAULT = bAbsoluteMin;
-    private double C_MIN_DEFAULT = cAbsoluteMin;
-    private final String X_MAX_PREFS = "X-Pos Max";
-    private final String Y_MAX_PREFS = "Y-Pos Max";
-    private final String Z_MAX_PREFS = "Z-Pos Max";
-    private final String A_MAX_PREFS = "A-Angle Max";
-    private final String B_MAX_PREFS = "B-Angle Max";
-    private final String C_MAX_PREFS = "C-Angle Max";
-    private double X_MAX_DEFAULT = xAbsoluteMax;
-    private double Y_MAX_DEFAULT = yAbsoluteMax;
-    private double Z_MAX_DEFAULT = zAbsoluteMax;
-    private double A_MAX_DEFAULT = aAbsoluteMax;
-    private double B_MAX_DEFAULT = bAbsoluteMax;
-    private double C_MAX_DEFAULT = cAbsoluteMax;
+    private final double aAbsoluteMin = 0;
+    private final double bAbsoluteMin = 0;
+    private final double cAbsoluteMin = 0;
+    private final double xAbsoluteMax = 600;
+    private final double yAbsoluteMax = 0;
+    private final double zAbsoluteMax = 0;
+    private final double aAbsoluteMax = 0;
+    private final double bAbsoluteMax = 0;
+    private final double cAbsoluteMax = 0;
+    private double X_SONAR_MIN_DEFAULT = xAbsoluteMin;
+    private double Y_SONAR_MIN_DEFAULT = yAbsoluteMin;
+    private double Z_SONAR_MIN_DEFAULT = zAbsoluteMin;
+    private double A_SONAR_MIN_DEFAULT = aAbsoluteMin;
+    private double B_SONAR_MIN_DEFAULT = bAbsoluteMin;
+    private double C_SONAR_MIN_DEFAULT = cAbsoluteMin;
+    private final String X_SONAR_MAX_PREFS = "X-Pos Sonar Max";
+    private final String Y_SONAR_MAX_PREFS = "Y-Pos Sonar Max";
+    private final String Z_SONAR_MAX_PREFS = "Z-Pos Sonar Max";
+    private final String A_SONAR_MAX_PREFS = "A-Angle Sonar Max";
+    private final String B_SONAR_MAX_PREFS = "B-Angle Sonar Max";
+    private final String C_SONAR_MAX_PREFS = "C-Angle Sonar Max";
+    private double X_SONAR_MAX_DEFAULT = xAbsoluteMax;
+    private double Y_SONAR_MAX_DEFAULT = yAbsoluteMax;
+    private double Z_SONAR_MAX_DEFAULT = zAbsoluteMax;
+    private double A_SONAR_MAX_DEFAULT = aAbsoluteMax;
+    private double B_SONAR_MAX_DEFAULT = bAbsoluteMax;
+    private double C_SONAR_MAX_DEFAULT = cAbsoluteMax;
 	protected JRadioButton sensorOffRadioButton;
 	protected JRadioButton sensorOnRadioButton;
 	private JLabel sensorSwitchLabel;
@@ -79,18 +79,18 @@ public class SensorMenu extends JFrame {
     
     private void initComponents(){
         preferences = Preferences.userNodeForPackage(RobotArmGUI.class);
-        X_MIN_DEFAULT = preferences.getDouble(X_MIN_PREFS, X_MIN_DEFAULT);
-        Y_MIN_DEFAULT = preferences.getDouble(Y_MIN_PREFS, Y_MIN_DEFAULT);
-        Z_MIN_DEFAULT = preferences.getDouble(Z_MIN_PREFS, Z_MIN_DEFAULT);
-        A_MIN_DEFAULT = preferences.getDouble(A_MIN_PREFS, A_MIN_DEFAULT);
-        B_MIN_DEFAULT = preferences.getDouble(B_MIN_PREFS, B_MIN_DEFAULT);
-        C_MIN_DEFAULT = preferences.getDouble(C_MIN_PREFS, C_MIN_DEFAULT);
-        X_MAX_DEFAULT = preferences.getDouble(X_MAX_PREFS, X_MAX_DEFAULT);
-        Y_MAX_DEFAULT = preferences.getDouble(Y_MAX_PREFS, Y_MAX_DEFAULT);
-        Z_MAX_DEFAULT = preferences.getDouble(Z_MAX_PREFS, Z_MAX_DEFAULT);
-        A_MAX_DEFAULT = preferences.getDouble(A_MAX_PREFS, A_MAX_DEFAULT);
-        B_MAX_DEFAULT = preferences.getDouble(B_MAX_PREFS, B_MAX_DEFAULT);
-        C_MAX_DEFAULT = preferences.getDouble(C_MAX_PREFS, C_MAX_DEFAULT);
+        X_SONAR_MIN_DEFAULT = preferences.getDouble(X_SONAR_MIN_PREFS, X_SONAR_MIN_DEFAULT);
+        Y_SONAR_MIN_DEFAULT = preferences.getDouble(Y_SONAR_MIN_PREFS, Y_SONAR_MIN_DEFAULT);
+        Z_SONAR_MIN_DEFAULT = preferences.getDouble(Z_SONAR_MIN_PREFS, Z_SONAR_MIN_DEFAULT);
+        A_SONAR_MIN_DEFAULT = preferences.getDouble(A_SONAR_MIN_PREFS, A_SONAR_MIN_DEFAULT);
+        B_SONAR_MIN_DEFAULT = preferences.getDouble(B_SONAR_MIN_PREFS, B_SONAR_MIN_DEFAULT);
+        C_SONAR_MIN_DEFAULT = preferences.getDouble(C_SONAR_MIN_PREFS, C_SONAR_MIN_DEFAULT);
+        X_SONAR_MAX_DEFAULT = preferences.getDouble(X_SONAR_MAX_PREFS, X_SONAR_MAX_DEFAULT);
+        Y_SONAR_MAX_DEFAULT = preferences.getDouble(Y_SONAR_MAX_PREFS, Y_SONAR_MAX_DEFAULT);
+        Z_SONAR_MAX_DEFAULT = preferences.getDouble(Z_SONAR_MAX_PREFS, Z_SONAR_MAX_DEFAULT);
+        A_SONAR_MAX_DEFAULT = preferences.getDouble(A_SONAR_MAX_PREFS, A_SONAR_MAX_DEFAULT);
+        B_SONAR_MAX_DEFAULT = preferences.getDouble(B_SONAR_MAX_PREFS, B_SONAR_MAX_DEFAULT);
+        C_SONAR_MAX_DEFAULT = preferences.getDouble(C_SONAR_MAX_PREFS, C_SONAR_MAX_DEFAULT);
         
         limitPanel = new JPanel();
         minimum = new JLabel("Minimum");
@@ -297,39 +297,39 @@ public class SensorMenu extends JFrame {
         a_Max=new Double(aMaxTextField.getText());b_Max=new Double(bMaxTextField.getText());c_Max=new Double(cMaxTextField.getText());
         x_Min=new Double(xMinTextField.getText());y_Min=new Double(yMinTextField.getText());z_Min=new Double(zMinTextField.getText());
         a_Min=new Double(aMinTextField.getText());b_Min=new Double(bMinTextField.getText());c_Min=new Double(cMinTextField.getText());
-        if (x_Min < x_Max && y_Min < y_Max && z_Min < z_Max && a_Min < a_Max && b_Min < b_Max && c_Min < c_Max &&
-                x_Min>=xAbsoluteMin && y_Min>=yAbsoluteMin && z_Min>=zAbsoluteMin && a_Min>=aAbsoluteMin && b_Min>=bAbsoluteMin && c_Min>=cAbsoluteMin &&
-                xAbsoluteMax>=x_Max && yAbsoluteMax>=y_Max && zAbsoluteMax>=z_Max && aAbsoluteMax>=a_Max && bAbsoluteMax>=b_Max && cAbsoluteMax>=c_Max){
+        if (x_Min < x_Max /*&& y_Min < y_Max && z_Min < z_Max && a_Min < a_Max && b_Min < b_Max && c_Min < c_Max*/ &&
+                x_Min>=xAbsoluteMin /*&& y_Min>=yAbsoluteMin && z_Min>=zAbsoluteMin && a_Min>=aAbsoluteMin && b_Min>=bAbsoluteMin && c_Min>=cAbsoluteMin*/ &&
+                xAbsoluteMax>=x_Max /*&& yAbsoluteMax>=y_Max && zAbsoluteMax>=z_Max && aAbsoluteMax>=a_Max && bAbsoluteMax>=b_Max && cAbsoluteMax>=c_Max*/){
             valid = true;
         }
         return valid;
     }
 
     private void setPrefsToTextField() {
-        xMinTextField.setText(""+X_MIN_DEFAULT);xMaxTextField.setText(""+X_MAX_DEFAULT);
-        yMinTextField.setText(""+Y_MIN_DEFAULT);yMaxTextField.setText(""+Y_MAX_DEFAULT);
-        zMinTextField.setText(""+Z_MIN_DEFAULT);zMaxTextField.setText(""+Z_MAX_DEFAULT);
-        aMinTextField.setText(""+A_MIN_DEFAULT);aMaxTextField.setText(""+A_MAX_DEFAULT);
-        bMinTextField.setText(""+B_MIN_DEFAULT);bMaxTextField.setText(""+B_MAX_DEFAULT);
-        cMinTextField.setText(""+C_MIN_DEFAULT);cMaxTextField.setText(""+C_MAX_DEFAULT);
+        xMinTextField.setText(""+X_SONAR_MIN_DEFAULT);xMaxTextField.setText(""+X_SONAR_MAX_DEFAULT);
+        yMinTextField.setText(""+Y_SONAR_MIN_DEFAULT);yMaxTextField.setText(""+Y_SONAR_MAX_DEFAULT);
+        zMinTextField.setText(""+Z_SONAR_MIN_DEFAULT);zMaxTextField.setText(""+Z_SONAR_MAX_DEFAULT);
+        aMinTextField.setText(""+A_SONAR_MIN_DEFAULT);aMaxTextField.setText(""+A_SONAR_MAX_DEFAULT);
+        bMinTextField.setText(""+B_SONAR_MIN_DEFAULT);bMaxTextField.setText(""+B_SONAR_MAX_DEFAULT);
+        cMinTextField.setText(""+C_SONAR_MIN_DEFAULT);cMaxTextField.setText(""+C_SONAR_MAX_DEFAULT);
     }
 
     private void setTextFieldToPrefs() {
-        preferences.putDouble(X_MIN_PREFS, new Double(xMinTextField.getText()));preferences.putDouble(X_MAX_PREFS, new Double(xMaxTextField.getText()));
-        preferences.putDouble(Y_MIN_PREFS, new Double(yMinTextField.getText()));preferences.putDouble(Y_MAX_PREFS, new Double(yMaxTextField.getText()));
-        preferences.putDouble(Z_MIN_PREFS, new Double(zMinTextField.getText()));preferences.putDouble(Z_MAX_PREFS, new Double(zMaxTextField.getText()));
-        preferences.putDouble(A_MIN_PREFS, new Double(aMinTextField.getText()));preferences.putDouble(A_MAX_PREFS, new Double(aMaxTextField.getText()));
-        preferences.putDouble(B_MIN_PREFS, new Double(bMinTextField.getText()));preferences.putDouble(B_MAX_PREFS, new Double(bMaxTextField.getText()));
-        preferences.putDouble(C_MIN_PREFS, new Double(cMinTextField.getText()));preferences.putDouble(C_MAX_PREFS, new Double(cMaxTextField.getText()));
+        preferences.putDouble(X_SONAR_MIN_PREFS, new Double(xMinTextField.getText()));preferences.putDouble(X_SONAR_MAX_PREFS, new Double(xMaxTextField.getText()));
+        preferences.putDouble(Y_SONAR_MIN_PREFS, new Double(yMinTextField.getText()));preferences.putDouble(Y_SONAR_MAX_PREFS, new Double(yMaxTextField.getText()));
+        preferences.putDouble(Z_SONAR_MIN_PREFS, new Double(zMinTextField.getText()));preferences.putDouble(Z_SONAR_MAX_PREFS, new Double(zMaxTextField.getText()));
+        preferences.putDouble(A_SONAR_MIN_PREFS, new Double(aMinTextField.getText()));preferences.putDouble(A_SONAR_MAX_PREFS, new Double(aMaxTextField.getText()));
+        preferences.putDouble(B_SONAR_MIN_PREFS, new Double(bMinTextField.getText()));preferences.putDouble(B_SONAR_MAX_PREFS, new Double(bMaxTextField.getText()));
+        preferences.putDouble(C_SONAR_MIN_PREFS, new Double(cMinTextField.getText()));preferences.putDouble(C_SONAR_MAX_PREFS, new Double(cMaxTextField.getText()));
     }
     
     public double[] getWindowMaxValues(){
-        double[] array = {X_MAX_DEFAULT,Y_MAX_DEFAULT,Z_MAX_DEFAULT,A_MAX_DEFAULT,B_MAX_DEFAULT,C_MAX_DEFAULT};
+        double[] array = {X_SONAR_MAX_DEFAULT,Y_SONAR_MAX_DEFAULT,Z_SONAR_MAX_DEFAULT,A_SONAR_MAX_DEFAULT,B_SONAR_MAX_DEFAULT,C_SONAR_MAX_DEFAULT};
         return array;
     }
     
     public double[] getWindowMinValues(){
-        double[] array = {X_MIN_DEFAULT,Y_MIN_DEFAULT,Z_MIN_DEFAULT,A_MIN_DEFAULT,B_MIN_DEFAULT,C_MIN_DEFAULT};
+        double[] array = {X_SONAR_MIN_DEFAULT,Y_SONAR_MIN_DEFAULT,Z_SONAR_MIN_DEFAULT,A_SONAR_MIN_DEFAULT,B_SONAR_MIN_DEFAULT,C_SONAR_MIN_DEFAULT};
         return array;
     }
 

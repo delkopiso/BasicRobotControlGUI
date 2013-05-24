@@ -41,7 +41,7 @@ public class RobotArmGUI extends JFrame {
     /** <p> The maximum speed the robot arm can translate 
      * in meters per seconds </p>
      */
-        protected final double MAX_SPEED = 500;
+        protected final double MAX_SPEED = 3000;
         /** <p> The maximum speed the robot arm can rotate 
      * in radians per seconds </p>
      */
@@ -573,15 +573,94 @@ public class RobotArmGUI extends JFrame {
     private boolean validate(double[] a){
     	double[] array = Arrays.copyOfRange(a, 0, 6);
     	for (int i=0; i<array.length;i++){
+    		switch (i){
+			case 0:
+				ALERT_MESSAGE = "The X-Point you specified is outside the set limits.";
+				break;
+			case 1:
+				ALERT_MESSAGE = "The Y-Point you specified is outside the set limits.";
+				break;
+			case 2:
+				ALERT_MESSAGE = "The Z-Point you specified is outside the set limits.";
+				break;
+			case 3:
+				ALERT_MESSAGE = "The A-Angle you specified is outside the set limits.";
+				break;
+			case 4:
+				ALERT_MESSAGE = "The B-Angle you specified is outside the set limits.";
+				break;
+			case 5:
+				ALERT_MESSAGE = "The C-Angle you specified is outside the set limits.";
+				break;
+			}
     		if((array[i] < getMinValues()[i]) || (array[i] > getMaxValues()[i]))
     			return false;
     	}
     	return true;
     }
     
-    public void sketchMove(int yPoint, int zPoint){
-    	//TODO: FLesh out behavior
+    public void holdMove(long yPoint, long zPoint){
     	System.out.println(yPoint+","+zPoint);
+    	x = 460;
+        y = 200-yPoint;
+        z = 870-zPoint;
+        a = getCurrentPosition()[3];
+        b = getCurrentPosition()[4];
+        c = getCurrentPosition()[5];
+        w = jogAngSpeedSlider.getValue();
+        v = jogSpeedSlider.getValue();
+        double[] array = {x,y,z,a,b,c,v,w};
+        if (validate(array)){
+//          array = MyUtil.determineCommandValues(array, getWindow(), getCurrentPosition());
+            String msg = MyUtil.convertDigitsToStringFormat(array);
+//            System.out.println(msg);
+            client.setData(msg);
+        }else{
+        	alert();
+        }
+    }
+    
+    public void prepSketchMove(){
+    	System.out.println("MOVING THE X");
+    	x = 480;
+        y = getCurrentPosition()[1];
+        z = getCurrentPosition()[2];
+        a = getCurrentPosition()[3];
+        b = getCurrentPosition()[4];
+        c = getCurrentPosition()[5];
+        w = jogAngSpeedSlider.getValue();
+        v = jogSpeedSlider.getValue();
+        double[] array = {x,y,z,a,b,c,v,w};
+        if (validate(array)){
+//          array = MyUtil.determineCommandValues(array, getWindow(), getCurrentPosition());
+            String msg = MyUtil.convertDigitsToStringFormat(array);
+//            System.out.println(msg);
+            client.setData(msg);
+        }else{
+        	alert();
+        }
+    }
+    
+    public void sketchMove(long yPoint, long zPoint){
+    	System.out.println("TRYING TO DRAW");
+    	System.out.println(yPoint+","+zPoint);
+    	x = 480;
+        y = 200-yPoint;
+        z = 870-zPoint;
+        a = getCurrentPosition()[3];
+        b = getCurrentPosition()[4];
+        c = getCurrentPosition()[5];
+        w = jogAngSpeedSlider.getValue();
+        v = jogSpeedSlider.getValue();
+        double[] array = {x,y,z,a,b,c,v,w};
+        if (validate(array)){
+//          array = MyUtil.determineCommandValues(array, getWindow(), getCurrentPosition());
+            String msg = MyUtil.convertDigitsToStringFormat(array);
+//            System.out.println(msg);
+            client.setData(msg);
+        }else{
+        	alert();
+        }
     }
     
     /**
@@ -599,18 +678,24 @@ public class RobotArmGUI extends JFrame {
     public void updateStatus2(String msg){
     	values = msg.split(",");
     	if(sonarSensorMenu.sensorMode){
-    		//if(Integer.parseInt(values[0])<400){
-    		if(Integer.parseInt(values[0])<400 && okay){
+    		int sonar = Integer.parseInt(values[0]);
+    		double lower = sonarSensorMenu.getWindowMinValues()[0];
+    		double upper = sonarSensorMenu.getWindowMaxValues()[0];
+    		System.out.println(">>>>>>> "+sonar+"<<<<<<<");
+    		if(sonar<1000 && (sonar<lower || sonar > upper)){
     			double[] current = getCurrentPosition();
     			current = Arrays.copyOf(current, COLUMN_SIZE);
-    			current[6] = 1; current[7] = 1;
-    			current[0] += 1; current[1] += 1;
+    			double k = .75;
+    			double diff = 550-sonar;
+    			current[6] = jogSpeedSlider.getValue(); 
+    			current[7] = jogAngSpeedSlider.getValue();
+    			current[0] -= diff*k;
     			String command = MyUtil.convertDigitsToStringFormat(current);
     			System.out.println(command);
     			client.setData(command);
     			okay=false;
     		}
-            statusField2.setText(msg);
+            statusField2.setText(values[0]);
     	}
     	if(ir1SensorMenu.sensorMode){
     		

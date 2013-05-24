@@ -15,8 +15,8 @@ class Sketchpad extends Frame implements
 		WindowListener		// closing a window
 {
 	// size of Sketchpad area
-	static final int WIDTH = 800;
-	static final int HEIGHT = 600;
+	static final int WIDTH = 200;
+	static final int HEIGHT = 200;
     private RobotArmGUI armGUI;
 		
 	// coordinate of upper-left hand corner of a rectangle
@@ -290,36 +290,36 @@ class Sketchpad extends Frame implements
 
 	//------------------------------------------------------------------
 
-	protected void closedShapes(Graphics g, String shape, boolean fill)
-	// method to draw a closed shape with the correct orientation
-	{
-		// calculate correct parameters for shape
-		upperLeftX = Math.min(x1,x2);
-		upperLeftY = Math.min(y1,y2);
-		width = Math.abs(x1-x2);
-		height = Math.abs(y1-y2);
-
-		// draw appropraite shape
-		if (shape.equals("square") && fill)
-			g.fillRect(upperLeftX,upperLeftY,width,width);
-		else if (shape.equals("square") && !fill)
-			g.drawRect(upperLeftX,upperLeftY,width,width);
-
-		else if (shape.equals("rectangle") && fill)
-			g.fillRect(upperLeftX,upperLeftY,width,height);
-		else if (shape.equals("rectangle") && !fill)
-			g.drawRect(upperLeftX,upperLeftY,width,height);
-
-		else if (shape.equals("circle") && fill)
-			g.fillOval(upperLeftX,upperLeftY,width,width);
-		else if (shape.equals("circle") && !fill)
-			g.drawOval(upperLeftX,upperLeftY,width,width);
-
-		else if (shape.equals("ellipse") && fill)
-			g.fillOval(upperLeftX,upperLeftY,width,height);
-		else if (shape.equals("ellipse") && !fill)
-			g.drawOval(upperLeftX,upperLeftY,width,height);	
-	}	
+//	protected void closedShapes(Graphics g, String shape, boolean fill)
+//	// method to draw a closed shape with the correct orientation
+//	{
+//		// calculate correct parameters for shape
+//		upperLeftX = Math.min(x1,x2);
+//		upperLeftY = Math.min(y1,y2);
+//		width = Math.abs(x1-x2);
+//		height = Math.abs(y1-y2);
+//
+//		// draw appropraite shape
+//		if (shape.equals("square") && fill)
+//			g.fillRect(upperLeftX,upperLeftY,width,width);
+//		else if (shape.equals("square") && !fill)
+//			g.drawRect(upperLeftX,upperLeftY,width,width);
+//
+//		else if (shape.equals("rectangle") && fill)
+//			g.fillRect(upperLeftX,upperLeftY,width,height);
+//		else if (shape.equals("rectangle") && !fill)
+//			g.drawRect(upperLeftX,upperLeftY,width,height);
+//
+//		else if (shape.equals("circle") && fill)
+//			g.fillOval(upperLeftX,upperLeftY,width,width);
+//		else if (shape.equals("circle") && !fill)
+//			g.drawOval(upperLeftX,upperLeftY,width,width);
+//
+//		else if (shape.equals("ellipse") && fill)
+//			g.fillOval(upperLeftX,upperLeftY,width,height);
+//		else if (shape.equals("ellipse") && !fill)
+//			g.drawOval(upperLeftX,upperLeftY,width,height);	
+//	}	
 
 	//------------------------------------------------------------------
 
@@ -327,6 +327,7 @@ class Sketchpad extends Frame implements
 	// method to display the coordinates of the mouse
 	{
 		position.setText("["+String.valueOf(X)+","+String.valueOf(Y)+"]");
+
 	}
 
 	
@@ -349,7 +350,13 @@ class Sketchpad extends Frame implements
 			g.setColor(Color.yellow);
 			g.fillRect(x2,y2,5,5);
 		}
-
+//		armGUI.sketchMove(Math.round((x2/new Double(this.getSize().width)))*WIDTH,
+//				Math.round(y2/new Double(this.getSize().height))*HEIGHT);
+		while(armGUI.getCurrentPosition()[0] < 479){
+			System.out.println("TRYING TO BLOCK UNTIL PEN ON PAPER");
+			armGUI.prepSketchMove();
+		}
+		armGUI.sketchMove(x2, y2);
 		displayMouseCoordinates(event.getX(), event.getY());		
 	}
 
@@ -376,7 +383,9 @@ class Sketchpad extends Frame implements
 		
 		x1=event.getX(); 
 		y1=event.getY();
-
+//		armGUI.holdMove(Math.round((x1/new Double(this.getSize().width)))*WIDTH,
+//				Math.round(y1/new Double(this.getSize().height))*HEIGHT);
+		armGUI.holdMove(x1, y1);
 		Graphics g = getGraphics();
 
 		// display reference point of coordinates (x1,y1)
@@ -404,27 +413,29 @@ class Sketchpad extends Frame implements
 		selectColor(g);
 		x2=event.getX();
 		y2=event.getY();		
-		
+//		armGUI.holdMove(Math.round((x2/new Double(this.getSize().width)))*WIDTH,
+//				Math.round(y2/new Double(this.getSize().height))*HEIGHT);
+		armGUI.holdMove(x2, y2);
 		if (drawShape.equals("line"))
 		{
 			g.drawLine(x1,y1,x2,y2);
 		}		
-		else if (drawShape.equals("circle"))
-		{
-			closedShapes(g,"circle",fill);		
-		}
-		else if (drawShape.equals("ellipse"))
-		{
-			closedShapes(g,"ellipse",fill);
-		}
-		else if (drawShape.equals("square"))
-		{
-			closedShapes(g,"square",fill);
-		}
-		else if (drawShape.equals("rectangle"))
-		{
-			closedShapes(g,"rectangle",fill);
-		}		
+//		else if (drawShape.equals("circle"))
+//		{
+//			closedShapes(g,"circle",fill);		
+//		}
+//		else if (drawShape.equals("ellipse"))
+//		{
+//			closedShapes(g,"ellipse",fill);
+//		}
+//		else if (drawShape.equals("square"))
+//		{
+//			closedShapes(g,"square",fill);
+//		}
+//		else if (drawShape.equals("rectangle"))
+//		{
+//			closedShapes(g,"rectangle",fill);
+//		}		
 
 		// erase reference point at coordinates (x1,y1)
 		g.setColor(Color.yellow);
