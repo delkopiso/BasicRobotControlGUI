@@ -43,10 +43,8 @@ public class FileOptionsListener implements ActionListener {
             gui.ir2SensorMenu.setVisible(true);
         }else if (e.getSource() == gui.sketchItem){
 //        	gui.sketchPad.init();
-//        	gui.getContentPane().add(gui.sketchPad.getContentPane());
+        	gui.getContentPane().add(gui.sketchPad.getContentPane());
 //        	gui.sketchPad.start();
-        	gui.sketchPad.setSize(gui.sketchPad.WIDTH, gui.sketchPad.HEIGHT);
-    		gui.sketchPad.setVisible(true);
         }
     }
 
