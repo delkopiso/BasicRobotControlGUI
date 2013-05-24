@@ -9,12 +9,15 @@ import javax.swing.SwingWorker;
 public class ButtonListener implements ActionListener {
 
     protected RobotArmGUI gui;
+
     
     public ButtonListener(RobotArmGUI gui) {
         this.gui = gui;
     }
 
-    public void actionPerformed(ActionEvent e) {
+
+	public void actionPerformed(ActionEvent e) {
+		System.out.println(e);
         if (e.getSource() == gui.runButton){
             SwingWorker<Integer,Void> tableRunner = new SwingWorker<Integer,Void>(){
                 @Override
