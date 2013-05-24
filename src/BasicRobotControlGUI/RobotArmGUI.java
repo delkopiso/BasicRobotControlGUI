@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.io.File;
+import java.util.Arrays;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -48,7 +49,10 @@ public class RobotArmGUI extends JFrame {
         private final String[] COLUMN_HEADINGS = {"x-pos","y-pos","z-pos","a-angle","b-angle","c-angle","velocity","omega"};
         
         protected SettingsMenu settingsMenu;
-        protected SensorMenu2 sensorMenu2;
+        protected SensorMenu sonarSensorMenu;
+		protected SensorMenu ir1SensorMenu;
+		protected SensorMenu ir2SensorMenu;
+		protected SimplePaint3 sketchPad;
         
     private JPanel mainPanel,jogModePanel, fileImportPanel;
 
@@ -111,6 +115,8 @@ public class RobotArmGUI extends JFrame {
     protected JMenuItem prefItem;
     protected JMenuItem sensItem;
     protected JMenuItem exitItem;
+    protected JMenuItem sketchItem;
+
     
     private JMenu sensorMenu;
     protected JMenuItem sensorItem1;
@@ -128,6 +134,9 @@ public class RobotArmGUI extends JFrame {
         //private Component statusLabel2;
         private JTextField statusField2;
         private JLabel statusLabel2;
+		private String[] values;
+		private boolean okay=true;
+		
         
     static RobotArmClient client;
 
@@ -156,12 +165,12 @@ public class RobotArmGUI extends JFrame {
         jogSpeedLabel = new JLabel("Jog Speed");
         jogAngSpeedLabel = new JLabel("Angular Speed");
 
-        aAngleTextField = new JTextField();
-        bAngleTextField = new JTextField();
-        cAngleTextField = new JTextField();
-        xPositionTextField = new JTextField();
-        yPositionTextField = new JTextField();
-        zPositionTextField = new JTextField();
+        aAngleTextField = new JTextField();//aAngleTextField.setEditable(false);
+        bAngleTextField = new JTextField();//bAngleTextField.setEditable(false);
+        cAngleTextField = new JTextField();//cAngleTextField.setEditable(false);
+        xPositionTextField = new JTextField();//xPositionTextField.setEditable(false);
+        yPositionTextField = new JTextField();//yPositionTextField.setEditable(false);
+        zPositionTextField = new JTextField();//zPositionTextField.setEditable(false);
         updatePositionTextFields();
 
         x = Double.parseDouble(xPositionTextField.getText());
@@ -234,6 +243,7 @@ public class RobotArmGUI extends JFrame {
         
         menuBar = new JMenuBar();
         fileMenu = new JMenu();
+        sketchItem = new JMenuItem("Open Sketchpad");
         openItem = new JMenuItem("Open...");
         saveItem = new JMenuItem("Save Table Entries");
         prefItem = new JMenuItem("Settings");
@@ -438,7 +448,11 @@ public class RobotArmGUI extends JFrame {
         fileMenu.add(prefItem);
         //fileMenu.add(sensItem);
         fileMenu.add(sensorMenu);
+        fileMenu.add(sketchItem);
         fileMenu.add(exitItem);
+        
+        sketchItem.addActionListener(new FileOptionsListener(this));
+        
         
         openItem.addActionListener(new FileOptionsListener(this));
         saveItem.addActionListener(new FileOptionsListener(this));
@@ -450,10 +464,13 @@ public class RobotArmGUI extends JFrame {
         sensorItem2.addActionListener(new FileOptionsListener(this));
         sensorItem3.addActionListener(new FileOptionsListener(this));
         
+        sketchPad = new SimplePaint3(this);
         settingsMenu = new SettingsMenu(this);
         posWindowMaxValues = settingsMenu.getWindowMaxValues();
         posWindowMinValues = settingsMenu.getWindowMinValues();
-        sensorMenu2 = new SensorMenu2(this);
+        sonarSensorMenu = new SensorMenu(this);
+        ir1SensorMenu = new SensorMenu(this);
+        ir2SensorMenu = new SensorMenu(this);
         
         setJMenuBar(menuBar);
         setContentPane(mainPanel);
@@ -523,9 +540,9 @@ public class RobotArmGUI extends JFrame {
         x = Double.parseDouble(xPositionTextField.getText());
         y = Double.parseDouble(yPositionTextField.getText());
         z = Double.parseDouble(zPositionTextField.getText());
-        a = Double.parseDouble(aAngleTextField.getText());
+        a = -175;//Double.parseDouble(aAngleTextField.getText());
         b = Double.parseDouble(bAngleTextField.getText());
-        c = Double.parseDouble(cAngleTextField.getText());
+        c = -175;//Double.parseDouble(cAngleTextField.getText());
         w = jogAngSpeedSlider.getValue();
         v = jogSpeedSlider.getValue();
         double[] array = {x,y,z,a,b,c,v,w};
@@ -533,6 +550,11 @@ public class RobotArmGUI extends JFrame {
         String msg = MyUtil.convertDigitsToStringFormat(array);
 //        System.out.println(msg);
         client.setData(msg);
+    }
+    
+    public void sketchMove(int yPoint, int zPoint){
+    	//TODO: FLesh out behavior
+    	System.out.println(yPoint+","+zPoint);
     }
     
     /**
@@ -548,7 +570,30 @@ public class RobotArmGUI extends JFrame {
     }
     
     public void updateStatus2(String msg){
-        statusField2.setText(msg);
+    	values = msg.split(",");
+    	if(sonarSensorMenu.sensorMode){
+    		//if(Integer.parseInt(values[0])<400){
+    		if(Integer.parseInt(values[0])<400 && okay){
+    			double[] current = getCurrentPosition();
+    			current = Arrays.copyOf(current, COLUMN_SIZE);
+    			current[6] = 1; current[7] = 1;
+    			current[0] += 1; current[1] += 1;
+    			String command = MyUtil.convertDigitsToStringFormat(current);
+    			System.out.println(command);
+    			client.setData(command);
+    			okay=false;
+    		}
+            statusField2.setText(msg);
+    	}
+    	if(ir1SensorMenu.sensorMode){
+    		
+    	}
+    	if(ir2SensorMenu.sensorMode){
+    		
+    	}
+    	
+    	
+
     }
     
     public void updateCurrentPosition(double[] array){
