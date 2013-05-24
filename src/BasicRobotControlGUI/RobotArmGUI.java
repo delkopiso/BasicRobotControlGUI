@@ -52,7 +52,7 @@ public class RobotArmGUI extends JFrame {
         protected SensorMenu sonarSensorMenu;
 		protected SensorMenu ir1SensorMenu;
 		protected SensorMenu ir2SensorMenu;
-		protected SimplePaint3 sketchPad;
+		protected Sketchpad sketchPad;
         
     private JPanel mainPanel,jogModePanel, fileImportPanel;
 
@@ -464,7 +464,9 @@ public class RobotArmGUI extends JFrame {
         sensorItem2.addActionListener(new FileOptionsListener(this));
         sensorItem3.addActionListener(new FileOptionsListener(this));
         
-        sketchPad = new SimplePaint3(this);
+
+        
+        sketchPad = new Sketchpad("Sketchpad", this);
         settingsMenu = new SettingsMenu(this);
         posWindowMaxValues = settingsMenu.getWindowMaxValues();
         posWindowMinValues = settingsMenu.getWindowMinValues();
