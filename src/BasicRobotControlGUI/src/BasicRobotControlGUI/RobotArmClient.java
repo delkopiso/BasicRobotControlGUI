@@ -85,7 +85,7 @@ public class RobotArmClient implements SerialPortEventListener {
      * Processes the server response and sends it to the gui
      * @throws IOException 
      */
-    public void read() throws IOException{
+    private void read() throws IOException{
         String line = in.readLine();
         String[] fields = line.split("\\|", 7);
         String status = fields[0];
@@ -98,7 +98,7 @@ public class RobotArmClient implements SerialPortEventListener {
         gui.updateStatus(status + "    " + format);
     }
     
-    public void send() {
+    private void send() {
         if (data != null){
             out.println(data);
             setData(null);

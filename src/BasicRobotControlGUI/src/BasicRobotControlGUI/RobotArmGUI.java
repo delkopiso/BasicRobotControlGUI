@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -47,6 +48,7 @@ public class RobotArmGUI extends JFrame {
     protected final double MAX_ANG_SPEED = 50;
         protected final int COLUMN_SIZE = 8;
         private final String[] COLUMN_HEADINGS = {"x-pos","y-pos","z-pos","a-angle","b-angle","c-angle","velocity","omega"};
+        private String ALERT_MESSAGE = "A point you specified is outside the set limits.";
         
         protected SettingsMenu settingsMenu;
         protected SensorMenu sonarSensorMenu;
@@ -530,26 +532,49 @@ public class RobotArmGUI extends JFrame {
 //            System.out.println(val);
 //        }
 //        values = MyUtil.determineCommandValues(values, getWindow(), getCurrentPosition());
-        client.setData(MyUtil.convertDigitsToStringFormat(values));
+        if (validate(values)){
+        	client.setData(MyUtil.convertDigitsToStringFormat(values));
+        }else{
+        	run.getAndSet(false);
+        	alert();
+        }
     }
     
-    /**
+    private void alert() {
+    	client.setData(null);
+    	JOptionPane.showMessageDialog(null, ALERT_MESSAGE, "ERROR", JOptionPane.ERROR_MESSAGE);
+	}
+
+	/**
      * Retrieves the values in each text field and sends info to robot arm
      */
     protected synchronized void sendPos(){
         x = Double.parseDouble(xPositionTextField.getText());
         y = Double.parseDouble(yPositionTextField.getText());
         z = Double.parseDouble(zPositionTextField.getText());
-        a = -175;//Double.parseDouble(aAngleTextField.getText());
+        a = Double.parseDouble(aAngleTextField.getText());
         b = Double.parseDouble(bAngleTextField.getText());
-        c = -175;//Double.parseDouble(cAngleTextField.getText());
+        c = Double.parseDouble(cAngleTextField.getText());
         w = jogAngSpeedSlider.getValue();
         v = jogSpeedSlider.getValue();
         double[] array = {x,y,z,a,b,c,v,w};
-//        array = MyUtil.determineCommandValues(array, getWindow(), getCurrentPosition());
-        String msg = MyUtil.convertDigitsToStringFormat(array);
-//        System.out.println(msg);
-        client.setData(msg);
+        if (validate(array)){
+//          array = MyUtil.determineCommandValues(array, getWindow(), getCurrentPosition());
+            String msg = MyUtil.convertDigitsToStringFormat(array);
+//            System.out.println(msg);
+            client.setData(msg);
+        }else{
+        	alert();
+        }
+    }
+    
+    private boolean validate(double[] a){
+    	double[] array = Arrays.copyOfRange(a, 0, 6);
+    	for (int i=0; i<array.length;i++){
+    		if((array[i] < getMinValues()[i]) || (array[i] > getMaxValues()[i]))
+    			return false;
+    	}
+    	return true;
     }
     
     public void sketchMove(int yPoint, int zPoint){
