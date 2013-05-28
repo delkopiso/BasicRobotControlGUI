@@ -37,8 +37,6 @@ public class SensorMenu2  extends JFrame {
     private String IR1_DEFAULT = "100";//cm
     private String IR2_DEFAULT = "100";//cm
     
-    
-    
     protected JRadioButton sonarSensorOn;
     protected JRadioButton sonarSensorOff;
     protected JRadioButton ir1SensorOn;
@@ -54,8 +52,6 @@ public class SensorMenu2  extends JFrame {
 	private JPanel mainPanel;
 	private JLabel nullLabel2;
 
-
-
     public SensorMenu2 (RobotArmGUI gui) {
         this.armGUI = gui;
         initComponents();
@@ -66,10 +62,7 @@ public class SensorMenu2  extends JFrame {
         SonarSensor_DEFAULT = preferences.get(X_PREFS, SonarSensor_DEFAULT);
         IR1_DEFAULT = preferences.get(Y_PREFS, IR1_DEFAULT);
         IR2_DEFAULT = preferences.get(Z_PREFS, IR2_DEFAULT);
-    
-        
-        
-        
+
         mainPanel = new JPanel();
         limitPanel2 = new JPanel();
         
@@ -117,21 +110,11 @@ public class SensorMenu2  extends JFrame {
         
         ir2SensorOn = new JRadioButton("ON");
         ir2SensorOn.setActionCommand("ON");
-        //ir2SensorOn.addActionListener(new ButtonListener(this));
         ir2SensorOff = new JRadioButton("OFF");
         ir2SensorOff.setActionCommand("OFF");
         ir2SensorGroup = new ButtonGroup();
         ir2SensorGroup.add(ir2SensorOn);
         ir2SensorGroup.add(ir2SensorOff);
-        //r2SensorOn
-       
-        
-        //jogOnRadioButton.addActionListener(new ButtonListener(this));
-        //jogOffRadioButton.addActionListener(new ButtonListener(this));
-        
-
-        
-
         setPrefsToTextField();
 
         OKButton = new JButton("OK");
@@ -148,8 +131,6 @@ public class SensorMenu2  extends JFrame {
         limitPanelLayout.setAutoCreateGaps(true);
         limitPanelLayout.setAutoCreateContainerGaps(true);
         
-        
-        
         limitPanelLayout.setHorizontalGroup(limitPanelLayout.createParallelGroup()
                 .addGroup(limitPanelLayout.createParallelGroup()
                     .addComponent(OKButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -164,9 +145,6 @@ public class SensorMenu2  extends JFrame {
                                     .addComponent(ir2Label, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                        
           */                          
-                                    
-                                    
-                    		
 /*                    		Edit Start Adding 
                             .addGroup(limitPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                             	.addGroup(limitPanelLayout.createSequentialGroup()
@@ -178,7 +156,6 @@ public class SensorMenu2  extends JFrame {
                             		                    		                            		
                                  
                          Edit End*/
-                        //.addGroup(limitPanelLayout.createParallelGroup()
                             .addGroup(limitPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                 .addComponent(ir2Label, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(ir1Label, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -217,8 +194,7 @@ public class SensorMenu2  extends JFrame {
                 .addGroup(limitPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(sonarSensorOff).addComponent(ir1SensorOff).addComponent(ir2SensorOff))   
                     
-  Edit End      */                 
-                    
+  Edit End      */
                     
                 .addGroup(limitPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(SonarLabel)
@@ -233,14 +209,7 @@ public class SensorMenu2  extends JFrame {
                     .addComponent(ir2SensorOn, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(ir2SensorOff, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addComponent(OKButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, 32)));
-        
-        
-        
-        
-        
-        
-        
-        
+
         /*Edit:Second Panel START*/
         
         GroupLayout limitPanelLayout2 = new GroupLayout(limitPanel2);
@@ -249,24 +218,11 @@ public class SensorMenu2  extends JFrame {
         limitPanelLayout2.setAutoCreateGaps(true);
         limitPanelLayout2.setAutoCreateContainerGaps(true);
         
-        
-        
         limitPanelLayout2.setHorizontalGroup(limitPanelLayout2.createParallelGroup()
                 .addGroup(limitPanelLayout2.createParallelGroup()
                     .addComponent(OKButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(limitPanelLayout2.createSequentialGroup()
                          .addGroup(limitPanelLayout2.createParallelGroup()
-                        		 
-  /*                      		 
-                        		 
-                            .addGroup(limitPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                            		.addComponent(SonarLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(ir1Label, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(ir2Label, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                       
-          */                          
-                                    
-                                    
                     		
 /*                    		Edit Start Adding 
                             .addGroup(limitPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
@@ -279,7 +235,6 @@ public class SensorMenu2  extends JFrame {
                             		                    		                            		
                                  
                          Edit End*/
-                        //.addGroup(limitPanelLayout.createParallelGroup()
                             .addGroup(limitPanelLayout2.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                 .addComponent(zlabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(xlabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -319,8 +274,7 @@ public class SensorMenu2  extends JFrame {
                     .addComponent(sonarSensorOff).addComponent(ir1SensorOff).addComponent(ir2SensorOff))   
                     
   Edit End      */                 
-                    
-                    
+
                 .addGroup(limitPanelLayout2.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(xlabel)
                     .addComponent(xTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -334,16 +288,8 @@ public class SensorMenu2  extends JFrame {
                     .addComponent(zTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(mm3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addComponent(OKButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, 32)));
-        
-        
-        
-        
         /*Edit:Second Panel END*/
         
-        
-        
-        
-        //this.add(mainPanel);
         GroupLayout mainPanelLayout = new GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         
@@ -352,25 +298,12 @@ public class SensorMenu2  extends JFrame {
         
         mainPanelLayout.setHorizontalGroup(mainPanelLayout.createParallelGroup()
                 .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addComponent(limitPanel).addComponent(limitPanel2))
-/*                .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addComponent(statusLabel)
-                        .addComponent(statusField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))*/);
+                        .addComponent(limitPanel).addComponent(limitPanel2)));
         
         mainPanelLayout.setVerticalGroup(mainPanelLayout.createSequentialGroup()
                 .addGroup(mainPanelLayout.createParallelGroup()
-                        .addComponent(limitPanel).addComponent(limitPanel2))
-/*                .addGroup(mainPanelLayout.createParallelGroup()
-                        .addComponent(statusLabel)
-                        .addComponent(statusField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))*/);
-        
-        
-        
-        
-        
-        
-        
-        
+                        .addComponent(limitPanel).addComponent(limitPanel2)));
+
         setContentPane(mainPanel);
         setResizable(false);
         setTitle("Sensors");
@@ -389,14 +322,12 @@ public class SensorMenu2  extends JFrame {
         xTextField.setText(SonarSensor_DEFAULT);
         yTextField.setText(IR1_DEFAULT);
         zTextField.setText(IR2_DEFAULT);
-
     }
 
     private void setTextFieldToPrefs() {
         preferences.put(X_PREFS, xTextField.getText());
         preferences.put(Y_PREFS, yTextField.getText());
         preferences.put(Z_PREFS, zTextField.getText());
-
     }
     
     public double[] getWindowValues(){

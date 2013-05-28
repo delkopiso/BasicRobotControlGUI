@@ -32,25 +32,34 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
 public class RobotArmGUI extends JFrame {
-        private static final long serialVersionUID = 1L;
-        /**<p> The delay in milliseconds in between sending each instruction in the file
-     * to the robot arm when the run button is pressed. </p>*/
-    protected final long runDelay = 1500;
-    /** <p> The maximum speed the robot arm can translate 
-     * in meters per seconds </p>
+    private static final long serialVersionUID = 1L;
+    /**
+     * <p>
+     * The delay in milliseconds in between sending each instruction in the file
+     * to the robot arm when the run button is pressed.
+     * </p>
      */
-        protected final double MAX_SPEED = 500;
-        /** <p> The maximum speed the robot arm can rotate 
-     * in radians per seconds </p>
+    protected final long runDelay = 1500;
+    /**
+     * <p>
+     * The maximum speed the robot arm can translate in meters per seconds
+     * </p>
+     */
+    protected final double MAX_SPEED = 500;
+    /**
+     * <p>
+     * The maximum speed the robot arm can rotate in radians per seconds
+     * </p>
      */
     protected final double MAX_ANG_SPEED = 50;
-        protected final int COLUMN_SIZE = 8;
-        private final String[] COLUMN_HEADINGS = {"x-pos","y-pos","z-pos","a-angle","b-angle","c-angle","velocity","omega"};
-        
-        protected SettingsMenu settingsMenu;
-        protected SensorMenu2 sensorMenu2;
-        
-    private JPanel mainPanel,jogModePanel, fileImportPanel;
+    protected final int COLUMN_SIZE = 8;
+    private final String[] COLUMN_HEADINGS = { "x-pos", "y-pos", "z-pos",
+            "a-angle", "b-angle", "c-angle", "velocity", "omega" };
+
+    protected SettingsMenu settingsMenu;
+    protected SensorMenu2 sensorMenu2;
+
+    private JPanel mainPanel, jogModePanel, fileImportPanel;
 
     private JLabel aAngleLabel;
     private JLabel bAngleLabel;
@@ -62,12 +71,12 @@ public class RobotArmGUI extends JFrame {
     private JLabel jogSpeedLabel;
     private JLabel jogAngSpeedLabel;
     private JLabel jogSwitchLabel;
-    
-    private double x,y,z,a,b,c,w,v;
+
+    private double x, y, z, a, b, c, w, v;
     private double[] posWindowMinValues;
     private double[] posWindowMaxValues;
-    private double[] currentPosition = {0,0,0,0,0,0};
-    
+    private double[] currentPosition = { 0, 0, 0, 0, 0, 0 };
+
     private JTextField aAngleTextField;
     private JTextField bAngleTextField;
     private JTextField cAngleTextField;
@@ -99,11 +108,11 @@ public class RobotArmGUI extends JFrame {
     protected boolean jogMode;
     protected volatile AtomicBoolean run;
     protected volatile AtomicInteger currentRow;
-    
+
     private JTable dataTable;
     protected DefaultTableModel dataTableModel;
     private JScrollPane dataTableScrollPane;
-    
+
     private JMenuBar menuBar;
     private JMenu fileMenu;
     protected JMenuItem openItem;
@@ -111,24 +120,23 @@ public class RobotArmGUI extends JFrame {
     protected JMenuItem prefItem;
     protected JMenuItem sensItem;
     protected JMenuItem exitItem;
-    
+
     private JMenu sensorMenu;
     protected JMenuItem sensorItem1;
     protected JMenuItem sensorItem2;
     protected JMenuItem sensorItem3;
-    
+
     protected JFileChooser fileChooser;
     private FileFilter filter;
 
     private JTextField statusField;
-    
+
     protected File openFile;
     protected File saveFile;
     protected String stringToSave;
-        //private Component statusLabel2;
-        private JTextField statusField2;
-        private JLabel statusLabel2;
-        
+    private JTextField statusField2;
+    private JLabel statusLabel2;
+
     static RobotArmClient client;
 
     /**
@@ -137,11 +145,10 @@ public class RobotArmGUI extends JFrame {
     public RobotArmGUI(RobotArmClient client) {
         RobotArmGUI.client = client;
         initComponents();
-        //startSensors();
     }
-   
+
     private void initComponents() {
-        
+
         mainPanel = new JPanel();
         jogModePanel = new JPanel();
         fileImportPanel = new JPanel();
@@ -170,7 +177,7 @@ public class RobotArmGUI extends JFrame {
         a = Double.parseDouble(aAngleTextField.getText());
         b = Double.parseDouble(bAngleTextField.getText());
         c = Double.parseDouble(cAngleTextField.getText());
-        
+
         xPositionDecrementButton = new JButton("DOWN");
         yPositionDecrementButton = new JButton("DOWN");
         zPositionDecrementButton = new JButton("DOWN");
@@ -185,7 +192,8 @@ public class RobotArmGUI extends JFrame {
         bAngleIncrementButton = new JButton("UP");
         goButton = new JButton("GO");
         runButton = new JButton("RUN");
-        stopButton = new JButton("STOP"); stopButton.setForeground(Color.RED);
+        stopButton = new JButton("STOP");
+        stopButton.setForeground(Color.RED);
         resetButton = new JButton("RESET");
         jogOnRadioButton = new JRadioButton("ON");
         jogOnRadioButton.setActionCommand("ON");
@@ -210,12 +218,19 @@ public class RobotArmGUI extends JFrame {
         jogMode = false;
         run = new AtomicBoolean(true);
         currentRow = new AtomicInteger(0);
-        
+
         dataTableModel = new DefaultTableModel(COLUMN_HEADINGS, 0);
-        dataTable = new JTable(dataTableModel){
+        dataTable = new JTable(dataTableModel) {
             private static final long serialVersionUID = 1L;
-            public Component prepareRenderer (TableCellRenderer renderer,int Index_row, int Index_col) {
-                Component comp = super.prepareRenderer(renderer, Index_row, Index_col);
+
+            /*
+             * making a custom table cell renderer to produce a green highlight
+             * over the row of data currently being sent
+             */
+            public Component prepareRenderer(TableCellRenderer renderer,
+                    int Index_row, int Index_col) {
+                Component comp = super.prepareRenderer(renderer, Index_row,
+                        Index_col);
                 if (Index_row == currentRow.get()) {
                     comp.setBackground(Color.GREEN);
                 } else {
@@ -226,12 +241,12 @@ public class RobotArmGUI extends JFrame {
         };
         dataTableScrollPane = new JScrollPane(dataTable);
         this.add(dataTableScrollPane, BorderLayout.CENTER);
-        
+
         sensorMenu = new JMenu();
         sensorItem1 = new JMenuItem("Sonar");
         sensorItem2 = new JMenuItem("IR1");
         sensorItem3 = new JMenuItem("IR2");
-        
+
         menuBar = new JMenuBar();
         fileMenu = new JMenu();
         openItem = new JMenuItem("Open...");
@@ -242,34 +257,49 @@ public class RobotArmGUI extends JFrame {
         fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         filter = new FileFilter() {
-                        public boolean accept(File f) {
-                return f.isDirectory() || f.getName().toLowerCase().endsWith(".csv") || f.getName().toLowerCase().endsWith(".txt");
+            public boolean accept(File f) {
+                return f.isDirectory()
+                        || f.getName().toLowerCase().endsWith(".csv")
+                        || f.getName().toLowerCase().endsWith(".txt");
             }
-                        public String getDescription() {
+
+            public String getDescription() {
                 return "*.csv, *.txt files";
             }
         };
         fileChooser.setFileFilter(filter);
-        
+
         statusLabel = new JLabel("CURRENT STATUS: ");
         statusField = new JTextField();
         statusField.setEditable(false);
         statusLabel2 = new JLabel("SENSORS: ");
         statusField2 = new JTextField();
         statusField2.setEditable(false);
-        
-        xPositionDecrementButton.addActionListener(new DecrementButtonListener(this, xPositionTextField));
-        xPositionIncrementButton.addActionListener(new IncrementButtonListener(this, xPositionTextField));
-        yPositionDecrementButton.addActionListener(new DecrementButtonListener(this, yPositionTextField));
-        yPositionIncrementButton.addActionListener(new IncrementButtonListener(this, yPositionTextField));
-        zPositionDecrementButton.addActionListener(new DecrementButtonListener(this, zPositionTextField));
-        zPositionIncrementButton.addActionListener(new IncrementButtonListener(this, zPositionTextField));
-        aAngleDecrementButton.addActionListener(new DecrementButtonListener(this, aAngleTextField));
-        aAngleIncrementButton.addActionListener(new IncrementButtonListener(this, aAngleTextField));
-        bAngleDecrementButton.addActionListener(new DecrementButtonListener(this, bAngleTextField));
-        bAngleIncrementButton.addActionListener(new IncrementButtonListener(this, bAngleTextField));
-        cAngleDecrementButton.addActionListener(new DecrementButtonListener(this, cAngleTextField));
-        cAngleIncrementButton.addActionListener(new IncrementButtonListener(this, cAngleTextField));
+
+        xPositionDecrementButton.addActionListener(new DecrementButtonListener(
+                this, xPositionTextField));
+        xPositionIncrementButton.addActionListener(new IncrementButtonListener(
+                this, xPositionTextField));
+        yPositionDecrementButton.addActionListener(new DecrementButtonListener(
+                this, yPositionTextField));
+        yPositionIncrementButton.addActionListener(new IncrementButtonListener(
+                this, yPositionTextField));
+        zPositionDecrementButton.addActionListener(new DecrementButtonListener(
+                this, zPositionTextField));
+        zPositionIncrementButton.addActionListener(new IncrementButtonListener(
+                this, zPositionTextField));
+        aAngleDecrementButton.addActionListener(new DecrementButtonListener(
+                this, aAngleTextField));
+        aAngleIncrementButton.addActionListener(new IncrementButtonListener(
+                this, aAngleTextField));
+        bAngleDecrementButton.addActionListener(new DecrementButtonListener(
+                this, bAngleTextField));
+        bAngleIncrementButton.addActionListener(new IncrementButtonListener(
+                this, bAngleTextField));
+        cAngleDecrementButton.addActionListener(new DecrementButtonListener(
+                this, cAngleTextField));
+        cAngleIncrementButton.addActionListener(new IncrementButtonListener(
+                this, cAngleTextField));
 
         goButton.addActionListener(new ButtonListener(this));
         jogOnRadioButton.addActionListener(new ButtonListener(this));
@@ -425,36 +455,34 @@ public class RobotArmGUI extends JFrame {
         sensorItem1 = new JMenuItem("Sonar");
         sensorItem2 = new JMenuItem("IR1");
         sensorItem3 = new JMenuItem("IR2");
-        
+
         sensorMenu.setText("Add Sensors");
         sensorMenu.add(sensorItem1);
         sensorMenu.add(sensorItem2);
         sensorMenu.add(sensorItem3);
-        
+
         fileMenu.setText("File");
         menuBar.add(fileMenu);
         fileMenu.add(openItem);
         fileMenu.add(saveItem);
         fileMenu.add(prefItem);
-        //fileMenu.add(sensItem);
         fileMenu.add(sensorMenu);
         fileMenu.add(exitItem);
-        
+
         openItem.addActionListener(new FileOptionsListener(this));
         saveItem.addActionListener(new FileOptionsListener(this));
         prefItem.addActionListener(new FileOptionsListener(this));
-        //sensItem.addActionListener(new FileOptionsListener(this));
         exitItem.addActionListener(new FileOptionsListener(this));
-        
+
         sensorItem1.addActionListener(new FileOptionsListener(this));
         sensorItem2.addActionListener(new FileOptionsListener(this));
         sensorItem3.addActionListener(new FileOptionsListener(this));
-        
+
         settingsMenu = new SettingsMenu(this);
         posWindowMaxValues = settingsMenu.getWindowMaxValues();
         posWindowMinValues = settingsMenu.getWindowMinValues();
         sensorMenu2 = new SensorMenu2(this);
-        
+
         setJMenuBar(menuBar);
         setContentPane(mainPanel);
         setResizable(false);
@@ -463,63 +491,86 @@ public class RobotArmGUI extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    /**
+     * <p>
+     * Updates the text fields visible to the user with values from the array
+     * storing the current robot's position.
+     * </p>
+     */
     private void updatePositionTextFields() {
-        aAngleTextField.setText(""+currentPosition[3]);
-        bAngleTextField.setText(""+currentPosition[4]);
-        cAngleTextField.setText(""+currentPosition[5]);
-        xPositionTextField.setText(""+currentPosition[0]);
-        yPositionTextField.setText(""+currentPosition[1]);
-        zPositionTextField.setText(""+currentPosition[2]);
-        }
+        aAngleTextField.setText("" + currentPosition[3]);
+        bAngleTextField.setText("" + currentPosition[4]);
+        cAngleTextField.setText("" + currentPosition[5]);
+        xPositionTextField.setText("" + currentPosition[0]);
+        yPositionTextField.setText("" + currentPosition[1]);
+        zPositionTextField.setText("" + currentPosition[2]);
+    }
 
-        /**
+    /**
+     * <p>
      * Populates the JTable with the contents of the imported file
+     * </p>
      */
     public void populateTable() {
-        try{
+        try {
             String[][] data = MyUtil.readFromfile(openFile);
-            for (String[] row : data){
+            for (String[] row : data) {
                 dataTableModel.addRow(row);
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
     }
-    
+
     /**
-     * <p> Retrieves the entries in the table and saves them to a file </p>
+     * <p>
+     * Retrieves the entries in the table and saves them to a file
+     * </p>
+     * 
+     * @return a String representation of the data in the table to be written to
+     *         a file.
      */
     public String pollTable() {
         String result = "";
         @SuppressWarnings("unchecked")
-        Vector<Vector<String>> dataVector = (Vector<Vector<String>>)dataTableModel.getDataVector();
-        for (int i=0; i<dataTableModel.getRowCount(); i++){
+        Vector<Vector<String>> dataVector = (Vector<Vector<String>>) dataTableModel
+                .getDataVector();
+        for (int i = 0; i < dataTableModel.getRowCount(); i++) {
             Vector<String> rowVector = dataVector.elementAt(i);
-            for (String s : rowVector){
-                if (rowVector.indexOf(s) < rowVector.size()-1) result += s +",";
-                else result += s +"\n";
+            for (String s : rowVector) {
+                if (rowVector.indexOf(s) < rowVector.size() - 1)
+                    result += s + ",";
+                else
+                    result += s + "\n";
             }
         }
         return result;
     }
-    
-    protected synchronized void sendTableEntry(int rowNumber){
+
+    /**
+     * <p>
+     * Retrieves the values from a row in the table and sends the info to robot
+     * arm
+     * </p>
+     * 
+     * @param rowNumber
+     *            the row of the table from which data was to be sent.
+     */
+    protected synchronized void sendTableEntry(int rowNumber) {
         double[] values = new double[COLUMN_SIZE];
-        for (int j=0; j < COLUMN_SIZE; j++){
+        for (int j = 0; j < COLUMN_SIZE; j++) {
             String val = (String) dataTableModel.getValueAt(rowNumber, j);
             values[j] = Double.parseDouble(val);
         }
-//        for(double val : values){
-//            System.out.println(val);
-//        }
-//        values = MyUtil.determineCommandValues(values, getWindow(), getCurrentPosition());
         client.setData(MyUtil.convertDigitsToStringFormat(values));
     }
-    
+
     /**
-     * Retrieves the values in each text field and sends info to robot arm
+     * <p>
+     * Retrieves the values in each text field and sends the info to robot arm
+     * </p>
      */
-    protected synchronized void sendPos(){
+    protected synchronized void sendPos() {
         x = Double.parseDouble(xPositionTextField.getText());
         y = Double.parseDouble(yPositionTextField.getText());
         z = Double.parseDouble(zPositionTextField.getText());
@@ -528,50 +579,101 @@ public class RobotArmGUI extends JFrame {
         c = Double.parseDouble(cAngleTextField.getText());
         w = jogAngSpeedSlider.getValue();
         v = jogSpeedSlider.getValue();
-        double[] array = {x,y,z,a,b,c,v,w};
-//        array = MyUtil.determineCommandValues(array, getWindow(), getCurrentPosition());
+        double[] array = { x, y, z, a, b, c, v, w };
         String msg = MyUtil.convertDigitsToStringFormat(array);
-//        System.out.println(msg);
         client.setData(msg);
     }
-    
+
     /**
+     * <p>
      * Retrieves the mode operation of the jog panel
+     * </p>
+     * 
      * @return true if the program is in jog mode, false otherwise
      */
-    protected boolean getJogMode(){
+    protected boolean getJogMode() {
         return jogMode;
     }
-    
-    public void updateStatus(String msg){
+
+    /**
+     * <p>
+     * Updates the user with the current position of the robot arm as reported
+     * by the server
+     * </p>
+     * 
+     * @param msg
+     *            the String value returned by the Python server
+     */
+    public void updateCommandStatus(String msg) {
         statusField.setText(msg);
     }
-    
-    public void updateStatus2(String msg){
+
+    /**
+     * <p>
+     * Updates the user with the current sensor readings for the sonars and IRs
+     * as reported by the server
+     * </p>
+     * 
+     * @param msg
+     *            the String value returned by the Python server
+     */
+    public void updateSensorStatus(String msg) {
         statusField2.setText(msg);
     }
-    
-    public void updateCurrentPosition(double[] array){
-        for (int i=0; i<currentPosition.length; i++){
-                currentPosition[i] = array[i];
+
+    /**
+     * <p>
+     * Updates the variable storing the current robot's pose with the incoming
+     * values from the Python server.
+     * </p>
+     * 
+     * @param array
+     *            the array containing the robot's new pose
+     */
+    public void updateCurrentPosition(double[] array) {
+        for (int i = 0; i < currentPosition.length; i++) {
+            currentPosition[i] = array[i];
         }
         updatePositionTextFields();
     }
-    
-    public double[] getCurrentPosition(){
+
+    /**
+     * <p>
+     * Retrieves the current values of the variables storing the current robot
+     * position
+     * </p>
+     * 
+     * @return an array with each of the robot joints' current values
+     */
+    public double[] getCurrentPosition() {
         return this.currentPosition;
     }
-    
-    public double[] getMinValues(){
+
+    /**
+     * <p>
+     * Retrieves the lower bound values of the coordinate system
+     * </p>
+     * 
+     * @return the minimum values of the position settings
+     */
+    public double[] getMinValues() {
         return this.posWindowMinValues;
     }
-    
-    public double[] getMaxValues(){
+
+    /**
+     * <p>
+     * Retrieves the upper bound values of the coordinate system
+     * </p>
+     * 
+     * @return the maximum values of the position settings
+     */
+    public double[] getMaxValues() {
         return this.posWindowMaxValues;
     }
-    
+
     /**
-     * @param args the command line arguments
+     * @param args
+     *            the command line arguments
      */
     public static void main(String args[]) {
         try {
@@ -582,7 +684,7 @@ public class RobotArmGUI extends JFrame {
 
         /* Create and display the form */
         SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
+            public void run() {
                 RobotArmGUI main = new RobotArmGUI(client);
                 main.setVisible(true);
             }

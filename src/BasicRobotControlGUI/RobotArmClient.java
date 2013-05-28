@@ -1,6 +1,5 @@
 package BasicRobotControlGUI;
 
-
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPortEvent; 
 import gnu.io.SerialPortEventListener; 
@@ -27,13 +26,10 @@ public class RobotArmClient implements SerialPortEventListener {
     private RobotArmGUI gui;
     private BufferedReader in;
     private final String testData = "TEST";
+    /**<p> The data that's being sent to the Python server </p>*/
     private String data = null;
     
-    
-    
-    
-    ///
-	SerialPort serialPort;
+    SerialPort serialPort;
     /** The port we're normally going to use. */
 	private static final String PORT_NAMES[] = { 
 		"/dev/tty.usbmodemfd1211",
@@ -54,8 +50,6 @@ public class RobotArmClient implements SerialPortEventListener {
 	private static final int TIME_OUT = 2000;
 	/** Default bits per second for COM port. */
 	private static final int DATA_RATE = 9600;
-
-///
 
     /**
      * Constructor for the Robot Arm GUI client
@@ -95,9 +89,13 @@ public class RobotArmClient implements SerialPortEventListener {
         }
         gui.updateCurrentPosition(array);
         String format = MyUtil.convertDigitsToStringFormat(array);
-        gui.updateStatus(status + "    " + format);
+        gui.updateCommandStatus(status + "    " + format);
     }
     
+    /**
+     * <p> Transmits data, when available, to the Python server. When 
+     * the data is unavailable, then the TEST parameter is sent instead. </p>
+     */
     public void send() {
         if (data != null){
             out.println(data);
@@ -108,29 +106,28 @@ public class RobotArmClient implements SerialPortEventListener {
         out.flush();
     }
     
+    /**
+     * <p> Allows the user to set the data to be sent </p>
+     * @param s the data value
+     */
     public void setData(String s){
         this.data = s;
     }
-/*
-    *//**
-     * Sends batch instructions to the Robot Arm server
-     *//*
-    public void sendBatch(List<String> list){
-        for (String s : list){
-            send(s);
-        }
-    }
-*/
+
+    /**
+     * <p> Exits the program and closes all open sockets. </p>
+     */
     public void quit() {
         try{
+            System.exit(1);
             socket.close();
         }catch(IOException e){
             System.out.println(e);
         }
     }
-    //// Start Serial Sensor Stuff ////
     
-	public void initialize() {
+    //// Start Serial Sensor Stuff ////
+    public void initialize() {
 		CommPortIdentifier portId = null;
 		Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
 
@@ -190,41 +187,21 @@ public class RobotArmClient implements SerialPortEventListener {
 		if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
 			try {
 				String inputLine=input.readLine();
-		        gui.updateStatus2("Sensor"+inputLine);
+		        gui.updateSensorStatus("Sensor"+inputLine);
 				System.out.println(inputLine);
 			} catch (Exception e) {
 				System.err.println(e.toString());
 			}
 		}
 		// Ignore all the other eventTypes, but you should consider the other ones.
-	}
-///// End Serial Sensor Stuff /////
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+	}///// End Serial Sensor Stuff /////
     
     
     /**
      * Start a RobotArmGUI client.
      */
-    public static void main(String[] args) {  
-    	
-    	
+    public static void main(String[] args) {   	
         try{
-
-	    	//SerialTest2 main = new SerialTest2();
-			//main.initialize();
-
-			//System.out.println("Started");
             RobotArmClient client = new RobotArmClient(robotIP, robotPORT);
             client.initialize();
             client.run();

@@ -19,9 +19,12 @@ public class SettingsMenu extends JFrame {
     private static final long serialVersionUID = 1L;
     private RobotArmGUI armGUI;
     private JPanel limitPanel;
-    private JLabel nullLabel, minimum, maximum, xlabel, ylabel, zlabel, alabel, blabel, clabel;
-    private JTextField xMinTextField, yMinTextField, zMinTextField, aMinTextField, bMinTextField, cMinTextField;
-    private JTextField xMaxTextField, yMaxTextField, zMaxTextField, aMaxTextField, bMaxTextField, cMaxTextField;
+    private JLabel nullLabel, minimum, maximum, xlabel, ylabel, zlabel, alabel,
+            blabel, clabel;
+    private JTextField xMinTextField, yMinTextField, zMinTextField,
+            aMinTextField, bMinTextField, cMinTextField;
+    private JTextField xMaxTextField, yMaxTextField, zMaxTextField,
+            aMaxTextField, bMaxTextField, cMaxTextField;
     private JLabel mm1, degrees1, mm2, degrees2, mm3, degrees3;
     protected JButton OKButton;
     private Preferences preferences;
@@ -62,13 +65,12 @@ public class SettingsMenu extends JFrame {
     private double B_MAX_DEFAULT = bAbsoluteMax;
     private double C_MAX_DEFAULT = cAbsoluteMax;
 
-
     public SettingsMenu(RobotArmGUI gui) {
         this.armGUI = gui;
         initComponents();
     }
-    
-    private void initComponents(){
+
+    private void initComponents() {
         preferences = Preferences.userNodeForPackage(RobotArmGUI.class);
         X_MIN_DEFAULT = preferences.getDouble(X_MIN_PREFS, X_MIN_DEFAULT);
         Y_MIN_DEFAULT = preferences.getDouble(Y_MIN_PREFS, Y_MIN_DEFAULT);
@@ -82,7 +84,7 @@ public class SettingsMenu extends JFrame {
         A_MAX_DEFAULT = preferences.getDouble(A_MAX_PREFS, A_MAX_DEFAULT);
         B_MAX_DEFAULT = preferences.getDouble(B_MAX_PREFS, B_MAX_DEFAULT);
         C_MAX_DEFAULT = preferences.getDouble(C_MAX_PREFS, C_MAX_DEFAULT);
-        
+
         limitPanel = new JPanel();
         minimum = new JLabel("Minimum");
         maximum = new JLabel("Maximum");
@@ -117,11 +119,13 @@ public class SettingsMenu extends JFrame {
         OKButton = new JButton("OK");
         OKButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (validEntries()){
+                if (validEntries()) {
                     setTextFieldToPrefs();
                     setVisible(false);
-                }else{
-                    JOptionPane.showMessageDialog(null, "The specified ranges are not physically possible", "ERROR", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null,
+                            "The specified ranges are not physically possible",
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -217,61 +221,124 @@ public class SettingsMenu extends JFrame {
                     .addComponent(cMaxTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(degrees3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addComponent(OKButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, 32)));
-        
+
         setContentPane(limitPanel);
         setResizable(false);
         setTitle("Settings");
         pack();
         setLocationRelativeTo(armGUI);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        addWindowListener( new WindowAdapter() {
+        addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-                JFrame frame = (JFrame)e.getSource();
+                JFrame frame = (JFrame) e.getSource();
                 frame.setVisible(false);
             }
         });
     }
-    
+
+    /**
+     * <p>
+     * Validates the values entered into each field in the settings box against
+     * the robot arm's hard limits.
+     * </p>
+     * 
+     * @return true if the values fall within the limits, and false otherwise.
+     */
     private boolean validEntries() {
         boolean valid = false;
-        double x_Min,y_Min,z_Min,a_Min,b_Min,c_Min,x_Max,y_Max,z_Max,a_Max,b_Max,c_Max;
-        x_Max=new Double(xMaxTextField.getText());y_Max=new Double(yMaxTextField.getText());z_Max=new Double(zMaxTextField.getText());
-        a_Max=new Double(aMaxTextField.getText());b_Max=new Double(bMaxTextField.getText());c_Max=new Double(cMaxTextField.getText());
-        x_Min=new Double(xMinTextField.getText());y_Min=new Double(yMinTextField.getText());z_Min=new Double(zMinTextField.getText());
-        a_Min=new Double(aMinTextField.getText());b_Min=new Double(bMinTextField.getText());c_Min=new Double(cMinTextField.getText());
-        if (x_Min < x_Max && y_Min < y_Max && z_Min < z_Max && a_Min < a_Max && b_Min < b_Max && c_Min < c_Max &&
-                x_Min>=xAbsoluteMin && y_Min>=yAbsoluteMin && z_Min>=zAbsoluteMin && a_Min>=aAbsoluteMin && b_Min>=bAbsoluteMin && c_Min>=cAbsoluteMin &&
-                xAbsoluteMax>=x_Max && yAbsoluteMax>=y_Max && zAbsoluteMax>=z_Max && aAbsoluteMax>=a_Max && bAbsoluteMax>=b_Max && cAbsoluteMax>=c_Max){
+        double x_Min, y_Min, z_Min, a_Min, b_Min, c_Min, x_Max, y_Max, z_Max, a_Max, b_Max, c_Max;
+        x_Max = new Double(xMaxTextField.getText());
+        y_Max = new Double(yMaxTextField.getText());
+        z_Max = new Double(zMaxTextField.getText());
+        a_Max = new Double(aMaxTextField.getText());
+        b_Max = new Double(bMaxTextField.getText());
+        c_Max = new Double(cMaxTextField.getText());
+        x_Min = new Double(xMinTextField.getText());
+        y_Min = new Double(yMinTextField.getText());
+        z_Min = new Double(zMinTextField.getText());
+        a_Min = new Double(aMinTextField.getText());
+        b_Min = new Double(bMinTextField.getText());
+        c_Min = new Double(cMinTextField.getText());
+        if (x_Min < x_Max && y_Min < y_Max && z_Min < z_Max && a_Min < a_Max
+                && b_Min < b_Max && c_Min < c_Max && x_Min >= xAbsoluteMin
+                && y_Min >= yAbsoluteMin && z_Min >= zAbsoluteMin
+                && a_Min >= aAbsoluteMin && b_Min >= bAbsoluteMin
+                && c_Min >= cAbsoluteMin && xAbsoluteMax >= x_Max
+                && yAbsoluteMax >= y_Max && zAbsoluteMax >= z_Max
+                && aAbsoluteMax >= a_Max && bAbsoluteMax >= b_Max
+                && cAbsoluteMax >= c_Max) {
             valid = true;
         }
         return valid;
     }
 
+    /**
+     * <p>
+     * Pulls the current stored user preferences and sets them visible to the
+     * user via the GUI.
+     * </p>
+     */
     private void setPrefsToTextField() {
-        xMinTextField.setText(""+X_MIN_DEFAULT);xMaxTextField.setText(""+X_MAX_DEFAULT);
-        yMinTextField.setText(""+Y_MIN_DEFAULT);yMaxTextField.setText(""+Y_MAX_DEFAULT);
-        zMinTextField.setText(""+Z_MIN_DEFAULT);zMaxTextField.setText(""+Z_MAX_DEFAULT);
-        aMinTextField.setText(""+A_MIN_DEFAULT);aMaxTextField.setText(""+A_MAX_DEFAULT);
-        bMinTextField.setText(""+B_MIN_DEFAULT);bMaxTextField.setText(""+B_MAX_DEFAULT);
-        cMinTextField.setText(""+C_MIN_DEFAULT);cMaxTextField.setText(""+C_MAX_DEFAULT);
+        xMinTextField.setText("" + X_MIN_DEFAULT);
+        xMaxTextField.setText("" + X_MAX_DEFAULT);
+        yMinTextField.setText("" + Y_MIN_DEFAULT);
+        yMaxTextField.setText("" + Y_MAX_DEFAULT);
+        zMinTextField.setText("" + Z_MIN_DEFAULT);
+        zMaxTextField.setText("" + Z_MAX_DEFAULT);
+        aMinTextField.setText("" + A_MIN_DEFAULT);
+        aMaxTextField.setText("" + A_MAX_DEFAULT);
+        bMinTextField.setText("" + B_MIN_DEFAULT);
+        bMaxTextField.setText("" + B_MAX_DEFAULT);
+        cMinTextField.setText("" + C_MIN_DEFAULT);
+        cMaxTextField.setText("" + C_MAX_DEFAULT);
     }
 
+    /**
+     * <p>
+     * Pulls the values entered by the user in the GUI text fields and saves
+     * them into the user preference node.
+     * </p>
+     */
     private void setTextFieldToPrefs() {
-        preferences.putDouble(X_MIN_PREFS, new Double(xMinTextField.getText()));preferences.putDouble(X_MAX_PREFS, new Double(xMaxTextField.getText()));
-        preferences.putDouble(Y_MIN_PREFS, new Double(yMinTextField.getText()));preferences.putDouble(Y_MAX_PREFS, new Double(yMaxTextField.getText()));
-        preferences.putDouble(Z_MIN_PREFS, new Double(zMinTextField.getText()));preferences.putDouble(Z_MAX_PREFS, new Double(zMaxTextField.getText()));
-        preferences.putDouble(A_MIN_PREFS, new Double(aMinTextField.getText()));preferences.putDouble(A_MAX_PREFS, new Double(aMaxTextField.getText()));
-        preferences.putDouble(B_MIN_PREFS, new Double(bMinTextField.getText()));preferences.putDouble(B_MAX_PREFS, new Double(bMaxTextField.getText()));
-        preferences.putDouble(C_MIN_PREFS, new Double(cMinTextField.getText()));preferences.putDouble(C_MAX_PREFS, new Double(cMaxTextField.getText()));
+        preferences.putDouble(X_MIN_PREFS, new Double(xMinTextField.getText()));
+        preferences.putDouble(X_MAX_PREFS, new Double(xMaxTextField.getText()));
+        preferences.putDouble(Y_MIN_PREFS, new Double(yMinTextField.getText()));
+        preferences.putDouble(Y_MAX_PREFS, new Double(yMaxTextField.getText()));
+        preferences.putDouble(Z_MIN_PREFS, new Double(zMinTextField.getText()));
+        preferences.putDouble(Z_MAX_PREFS, new Double(zMaxTextField.getText()));
+        preferences.putDouble(A_MIN_PREFS, new Double(aMinTextField.getText()));
+        preferences.putDouble(A_MAX_PREFS, new Double(aMaxTextField.getText()));
+        preferences.putDouble(B_MIN_PREFS, new Double(bMinTextField.getText()));
+        preferences.putDouble(B_MAX_PREFS, new Double(bMaxTextField.getText()));
+        preferences.putDouble(C_MIN_PREFS, new Double(cMinTextField.getText()));
+        preferences.putDouble(C_MAX_PREFS, new Double(cMaxTextField.getText()));
     }
-    
-    public double[] getWindowMaxValues(){
-        double[] array = {X_MAX_DEFAULT,Y_MAX_DEFAULT,Z_MAX_DEFAULT,A_MAX_DEFAULT,B_MAX_DEFAULT,C_MAX_DEFAULT};
+
+    /**
+     * <p>
+     * Retrieves the upper bound of the user's preferences for the robot's
+     * window of operation.
+     * </p>
+     * 
+     * @return an array of the maximum values of the user's preferences
+     */
+    public double[] getWindowMaxValues() {
+        double[] array = { X_MAX_DEFAULT, Y_MAX_DEFAULT, Z_MAX_DEFAULT,
+                A_MAX_DEFAULT, B_MAX_DEFAULT, C_MAX_DEFAULT };
         return array;
     }
-    
-    public double[] getWindowMinValues(){
-        double[] array = {X_MIN_DEFAULT,Y_MIN_DEFAULT,Z_MIN_DEFAULT,A_MIN_DEFAULT,B_MIN_DEFAULT,C_MIN_DEFAULT};
+
+    /**
+     * <p>
+     * Retrieves the lower bound of the user's preferences for the robot's
+     * window of operation.
+     * </p>
+     * 
+     * @return an array of the minimum values of the user's preferences
+     */
+    public double[] getWindowMinValues() {
+        double[] array = { X_MIN_DEFAULT, Y_MIN_DEFAULT, Z_MIN_DEFAULT,
+                A_MIN_DEFAULT, B_MIN_DEFAULT, C_MIN_DEFAULT };
         return array;
     }
 
